@@ -29,7 +29,7 @@ foreach dep : switch_dependencies
         dep,
         required: true,
         allow_fallback: false,
-        native: false
+        native: false,
     )
 endforeach
 
@@ -49,10 +49,11 @@ endforeach
 ## compilation
 
 elf_file = build_target(
-    exe_name + '_switch.elf',
+    exe_name + '.elf',
     src_files,
     include_directories: inc_dirs,
     dependencies: deps,
+    c_args: compile_args,
     cpp_args: compile_args,
     override_options: [
         'warning_level=3',
