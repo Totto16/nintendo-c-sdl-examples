@@ -90,7 +90,7 @@ library_dirs= ['$LIBCTRU_LIB', '$PORTLIBS_LIB']
 romfs_dir='$ROMFS'
 libctru='$LIBCTRU'
 
-APP_TITLE	= 'sdl_example'
+APP_NAME	= 'sdl_example'
 APP_AUTHOR 	= 'Totto16'
 APP_DESC = 'SDL Example'
 

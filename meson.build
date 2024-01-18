@@ -28,7 +28,7 @@ endif
 sdl_name = 'sdl2'
 
 if host_machine.system() == 'switch'
-
+elif host_machine.system() == 'wiiu'
 elif host_machine.system() == '3ds'
     sdl_name = 'sdl'
     compile_args += ['-D_USE_SDL_LEGACY_VERSION']
@@ -92,6 +92,10 @@ exe_name = 'sdl_example'
 
 if meson.is_cross_build() and host_machine.system() == 'switch'
     subdir('platforms/switch')
+elif meson.is_cross_build() and host_machine.system() == 'wiiu'
+    subdir('platforms/wiiu')
 elif meson.is_cross_build() and host_machine.system() == '3ds'
     subdir('platforms/3ds')
+else
+    error('Not implemnted for host system: \'' + host_machine.system() + '\'')
 endif

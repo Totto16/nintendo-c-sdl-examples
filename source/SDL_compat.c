@@ -95,5 +95,36 @@ void debug_print(const char* text) {
     svcOutputDebugString(text, strlen(text));
 #elif defined(__SWITCH__)
     svcOutputDebugString(text, strlen(text));
+#elif defined(__WIIU__)
+    WHBLogPrintf(text);
+#else
+#error not implemented
+#endif
+}
+
+void platform_init() {
+#if defined(__3DS__) || defined(__SWITCH__)
+    Result ret = romfsInit();
+    if (R_FAILED(ret)) {
+        DEBUG_PRINTF("SDL_EXAMPLE: romfsInit() failed: 0x%08x\n", (unsigned int) ret);
+        return 1;
+    }
+#elif defined(__WIIU__)
+    //TODO: test if this console is this what i think
+    WHBProcInit();
+    WHBLogConsoleInit();
+#else
+#error not implemented
+#endif
+}
+
+void platform_exit() {
+#if defined(__3DS__) || defined(__SWITCH__)
+    romfsExit();
+#elif defined(__WIIU__)
+    WHBLogConsoleFree();
+    WHBProcShutdown();
+#else
+#error not implemented
 #endif
 }

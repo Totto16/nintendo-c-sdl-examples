@@ -48,11 +48,8 @@ int rand_range(int min, int max) {
 }
 
 int main(void) {
-    Result ret = romfsInit();
-    if (R_FAILED(ret)) {
-        DEBUG_PRINTF("SDL_EXAMPLE: romfsInit() failed: 0x%08x\n", (unsigned int) ret);
-        return 1;
-    }
+    platform_init();
+
 
     int exit_requested = 0;
     int trail = 0;
@@ -301,6 +298,6 @@ int main(void) {
     TTF_Quit();
     Mix_Quit();
     SDL_Quit();
-    romfsExit();
+    platform_exit();
     return 0;
 }

@@ -14,6 +14,12 @@
 #include <3ds.h>
 #endif
 
+#if defined(__WIIU__)
+#include <whb/log.h>
+#include <whb/log_console.h>
+#include <whb/proc.h>
+#endif
+
 
 #ifdef _USE_SDL_LEGACY_VERSION
 
@@ -57,6 +63,9 @@ void SDL_compat_present(SDL_RENDERER_TYPE renderer);
 
 void debug_print(const char* text);
 
+void platform_init();
+
+void platform_exit();
 
 #define DEBUG_PRINTF(...)                                             \
     do {                                                              \
@@ -80,6 +89,11 @@ void debug_print(const char* text);
 #define GENERAL_MAIN_LOOP aptMainLoop
 #elif defined(__SWITCH__)
 #define GENERAL_MAIN_LOOP appletMainLoop
+#elif defined(__WIIU__)
+#define GENERAL_MAIN_LOOP WHBProcIsRunning
+#else
+#error not implemented
 #endif
+
 
 #define ROMFS_DIR "romfs:/data/"
