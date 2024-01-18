@@ -15,8 +15,7 @@
 #endif
 
 #if defined(__WIIU__)
-#include <whb/log.h>
-#include <whb/log_console.h>
+#include <coreinit/debug.h>
 #include <whb/proc.h>
 #endif
 
@@ -73,12 +72,12 @@ void platform_exit();
         int toWrite = snprintf(NULL, 0, __VA_ARGS__) + 1;             \
         internalBuffer = (char*) malloc(toWrite * sizeof(char));      \
         if (internalBuffer == NULL) {                                 \
-            exit(1);                                                  \
+            exit(200);                                                \
         }                                                             \
         int written = snprintf(internalBuffer, toWrite, __VA_ARGS__); \
         if (written >= toWrite) {                                     \
             free(internalBuffer);                                     \
-            exit(1);                                                  \
+            exit(201);                                                \
         }                                                             \
         debug_print(internalBuffer);                                  \
         free(internalBuffer);                                         \
@@ -95,5 +94,10 @@ void platform_exit();
 #error not implemented
 #endif
 
-
+#if defined(__3DS__) || defined(__SWITCH__)
 #define ROMFS_DIR "romfs:/data/"
+#elif defined(__WIIU__)
+#define ROMFS_DIR "/content/data/"
+#else
+#error not implemented
+#endif

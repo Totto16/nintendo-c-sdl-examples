@@ -50,6 +50,7 @@ int rand_range(int min, int max) {
 int main(void) {
     platform_init();
 
+    DEBUG_PRINTF("SDL_HELLO FROM HERE\n");
 
     int exit_requested = 0;
     int trail = 0;
@@ -89,17 +90,17 @@ int main(void) {
 
     if (Mix_Init(MIX_INIT_OGG) == 0) {
         DEBUG_PRINTF("SDL_Mix_Init error: %s\n", SDL_GetError());
-        return 1;
+        return 2;
     };
 
     if (IMG_Init(IMG_INIT_PNG) == 0) {
         DEBUG_PRINTF("SDL_IMG_Init error: %s\n", SDL_GetError());
-        return 1;
+        return 3;
     };
 
     if (TTF_Init() != 0) {
         DEBUG_PRINTF("SDL_TTF_Init error: %s\n", SDL_GetError());
-        return 1;
+        return 4;
     };
 
 
@@ -109,7 +110,6 @@ int main(void) {
     SDL_Surface* sdllogo = IMG_Load(ROMFS_DIR "sdl.png");
     if (!sdllogo) {
         DEBUG_PRINTF("Couldn't load sdllogo: %s\n", SDL_GetError());
-        return 1;
     }
 
     sdl_pos.w = sdllogo->w;
@@ -119,7 +119,6 @@ int main(void) {
     sdllogo_tex = SDL_CreateTextureFromSurface(renderer, sdllogo);
     if (!sdllogo_tex) {
         DEBUG_PRINTF("Couldn't load sdllogo_tex: %s\n", SDL_GetError());
-        return 1;
     }
     SDL_FreeSurface(sdllogo);
 #else
@@ -130,7 +129,6 @@ int main(void) {
     SDL_Surface* switchlogo = IMG_Load(ROMFS_DIR "switch.png");
     if (!switchlogo) {
         DEBUG_PRINTF("Couldn't load switchlogo: %s\n", SDL_GetError());
-        return 1;
     }
 
     pos.x = SCREEN_W / 2 - switchlogo->w / 2;
@@ -142,7 +140,6 @@ int main(void) {
     switchlogo_tex = SDL_CreateTextureFromSurface(renderer, switchlogo);
     if (!switchlogo_tex) {
         DEBUG_PRINTF("Couldn't load switchlogo_tex: %s\n", SDL_GetError());
-        return 1;
     }
     SDL_FreeSurface(switchlogo);
 #else
@@ -160,19 +157,20 @@ int main(void) {
     TTF_Font* font = TTF_OpenFont(ROMFS_DIR "LeroyLetteringLightBeta01.ttf", 36);
     if (!font) {
         DEBUG_PRINTF("Couldn't load font: %s\n", SDL_GetError());
-        return 1;
     }
 
-    // render text as texture
     SDL_Rect helloworld_rect = { 0, SCREEN_H - 36, 0, 0 };
-    helloworld_tex = render_text(renderer, "Hello, world!", font, colors[1], &helloworld_rect);
-    if (!helloworld_tex) {
-        DEBUG_PRINTF("Couldn't load helloworld_tex: %s\n", SDL_GetError());
-        return 1;
+    if (font) {
+        // render text as texture
+        helloworld_tex = render_text(renderer, "Hello, world!", font, colors[1], &helloworld_rect);
+        if (!helloworld_tex) {
+            DEBUG_PRINTF("Couldn't load helloworld_tex: %s\n", SDL_GetError());
+        }
+
+        // no need to keep the font loaded
+        TTF_CloseFont(font);
     }
 
-    // no need to keep the font loaded
-    TTF_CloseFont(font);
 
     SDL_InitSubSystem(SDL_INIT_AUDIO);
     Mix_AllocateChannels(5);
@@ -259,17 +257,24 @@ int main(void) {
 
 
         // put logos on screen
-        SDL_compat_render_texture(renderer, sdllogo_tex, NULL, &sdl_pos);
+        if (sdllogo_tex) {
+            SDL_compat_render_texture(renderer, sdllogo_tex, NULL, &sdl_pos);
+        }
 
+        if (switchlogo_tex) {
 #ifdef SDL_SUPPORTS_COLOR_MOD
-        SDL_SetTextureColorMod(switchlogo_tex, colors[col].r, colors[col].g, colors[col].b);
-        SDL_compat_render_texture(renderer, switchlogo_tex, NULL, &pos);
+
+            SDL_SetTextureColorMod(switchlogo_tex, colors[col].r, colors[col].g, colors[col].b);
 #else
-        (void) col;
+            (void) col;
 #endif
+            SDL_compat_render_texture(renderer, switchlogo_tex, NULL, &pos);
+        }
 
         // put text on screen
-        SDL_compat_render_texture(renderer, helloworld_tex, NULL, &helloworld_rect);
+        if (helloworld_tex) {
+            SDL_compat_render_texture(renderer, helloworld_tex, NULL, &helloworld_rect);
+        }
 
 
         SDL_compat_present(renderer);
@@ -277,11 +282,15 @@ int main(void) {
     }
 
     // clean up your textures when you are done with them
-    SDL_COMPAT_TEXTURE_DESTROY(sdllogo_tex);
-
-    SDL_COMPAT_TEXTURE_DESTROY(switchlogo_tex);
-
-    SDL_COMPAT_TEXTURE_DESTROY(helloworld_tex);
+    if (sdllogo_tex) {
+        SDL_COMPAT_TEXTURE_DESTROY(sdllogo_tex);
+    }
+    if (switchlogo_tex) {
+        SDL_COMPAT_TEXTURE_DESTROY(switchlogo_tex);
+    }
+    if (helloworld_tex) {
+        SDL_COMPAT_TEXTURE_DESTROY(helloworld_tex);
+    }
 
 
     // stop sounds and free loaded data
