@@ -8,6 +8,9 @@ It uses meson and not Makefiles.
 
 It is based on examples in [switch-examples](https://github.com/switchbrew/switch-examples.git)
 
+It is based on my meson work in [oopetris](https://github.com/mgerhold/oopetris)
+
+
 ## How to build
 
 You need sdl portlibs for the platform and some other portlibs, than you can build it by running:

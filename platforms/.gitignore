@@ -1,0 +1,9 @@
+crossbuild.ini
+crossbuild-*.ini
+
+*.elf
+*.nacp
+*.nso
+*.nro
+*.pfs0
+romfs/

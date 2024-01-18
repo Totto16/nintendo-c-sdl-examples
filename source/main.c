@@ -1,9 +1,11 @@
 /* Mini SDL Demo
  * featuring SDL2 + SDL2_mixer + SDL2_image + SDL2_ttf
  * on Nintendo Switch using libnx
+ * on Nintendo 3DS using libctru
  *
  * Copyright 2018 carsten1ns
  *           2020 WinterMute
+ *           2024 Totto16
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -63,7 +65,7 @@ int rand_range(int min, int max){
 }
 
 
-int main(int argc, char** argv) {
+int main(void) {
 
     romfsInit();
     chdir("romfs:/");
