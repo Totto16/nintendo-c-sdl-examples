@@ -1,0 +1,37 @@
+name: Nintendo Switch CI
+
+on:
+    push:
+        branches: ["main"]
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    switch-build:
+        runs-on: ubuntu-22.04
+        container:
+            image: devkitpro/devkita64 ## base on debian:buster-slim
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: "0"
+
+            - name: Setup Meson
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install python3 python3-pip -y
+                  python3 -m pip install --upgrade pip
+                  pip install meson
+
+            - name: Setup ninja
+              uses: abdes/gha-setup-ninja@master
+
+            - name: Configure and Build
+              run: |
+                  bash ./platforms/build-switch.sh
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: sdl_example.nro
+                  path: build-switch/sdl_example.nro
