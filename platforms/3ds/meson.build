@@ -10,9 +10,12 @@ _3ds_dependencies = [
     'libmodplug',
     'flac',
     'zlib',
+    'vorbisidec',
+    'ogg',
+    'libmikmod',
 ]
 
-_3ds_dependencies_native = ['ctru', 'bz2']
+_3ds_dependencies_native = ['ctru', 'bz2', 'libmad']
 
 
 library_dirs = meson.get_external_property('library_dirs')
@@ -107,7 +110,7 @@ SMDH_FLAGS += (
 
 
 
-small_app_icon = meson.get_external_property('APP_SMALL_ICON', default_icon)
+small_app_icon = meson.get_external_property('APP_SMALL_ICON', '')
 
 if small_app_icon != ''
     if not fs.is_absolute(small_app_icon)

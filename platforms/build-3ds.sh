@@ -37,12 +37,10 @@ export NM="$COMPILER_BIN/$TOOL_PREFIX-gcc-nm"
 export OBJCOPY="$COMPILER_BIN/$TOOL_PREFIX-objcopy"
 export STRIP="$COMPILER_BIN/$TOOL_PREFIX-strip"
 
-# compat flags for some POSIX functions, for some ABI errors, and spdlog thread local errors
-export COMPAT_FLAGS="'-D_XOPEN_SOURCE','-Wno-psabi','-DSPDLOG_NO_TLS'"
 
 export ARCH=arm
 export ARM_VERSION=armv6k
-export COMMON_FLAGS="'-D__3DS__','-mword-relocations', '-ffunction-sections','-mword-relocations', $COMPAT_FLAGS"
+export COMMON_FLAGS="'-D__3DS__','-mword-relocations', '-ffunction-sections','-mword-relocations'"
 
 export COMPILE_FLAGS="'-march=armv6k','-mtune=mpcore','-mfloat-abi=hard', '-mtp=soft','-fPIC', '-isystem', '$LIBCTRU/include'"
 

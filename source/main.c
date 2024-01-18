@@ -26,13 +26,6 @@
 
 #include "SDL_compat.h"
 
-#if defined(__SWITCH__)
-#include <switch.h>
-#endif
-
-#if defined(__3DS__)
-#include <3ds.h>
-#endif
 
 // some switch buttons
 #define JOY_A 0
@@ -55,10 +48,9 @@ int rand_range(int min, int max) {
 }
 
 int main(void) {
-
     Result ret = romfsInit();
     if (R_FAILED(ret)) {
-        fprintf(stderr, "romfsInit() failed: 0x%08x\n", (unsigned int) ret);
+        DEBUG_PRINTF("SDL_EXAMPLE: romfsInit() failed: 0x%08x\n", (unsigned int) ret);
         return 1;
     }
 
@@ -70,7 +62,8 @@ int main(void) {
     SDL_TEXT_TYPE sdllogo_tex = NULL;
     SDL_TEXT_TYPE helloworld_tex = NULL;
 
-    SDL_Rect pos = { 0, 0, 0, 0 }, sdl_pos = { 0, 0, 0, 0 };
+    SDL_Rect pos = { 0, 0, 0, 0 };
+    SDL_Rect sdl_pos = { 0, 0, 0, 0 };
     Mix_Music* music = NULL;
     Mix_Chunk* sound[4] = { NULL };
     SDL_Event event;
@@ -85,29 +78,30 @@ int main(void) {
         {  0, 255, 255, 0}, // cyan
         {255,   0, 255, 0}, // purple
     };
-    int col = 0, snd = 0;
+    int col = 0;
+    int snd = 0;
 
     srand(time(NULL));
     int vel_x = rand_range(1, 5);
     int vel_y = rand_range(1, 5);
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
-        fprintf(stderr, "SDL_Init error: %s\n", SDL_GetError());
+        DEBUG_PRINTF("SDL_Init error: %s\n", SDL_GetError());
         return 1;
     }
 
     if (Mix_Init(MIX_INIT_OGG) == 0) {
-        fprintf(stderr, "SDL_Mix_Init error: %s\n", SDL_GetError());
+        DEBUG_PRINTF("SDL_Mix_Init error: %s\n", SDL_GetError());
         return 1;
     };
 
     if (IMG_Init(IMG_INIT_PNG) == 0) {
-        fprintf(stderr, "SDL_IMG_Init error: %s\n", SDL_GetError());
+        DEBUG_PRINTF("SDL_IMG_Init error: %s\n", SDL_GetError());
         return 1;
     };
 
     if (TTF_Init() != 0) {
-        fprintf(stderr, "SDL_TTF_Init error: %s\n", SDL_GetError());
+        DEBUG_PRINTF("SDL_TTF_Init error: %s\n", SDL_GetError());
         return 1;
     };
 
@@ -117,23 +111,28 @@ int main(void) {
     // load logos from file
     SDL_Surface* sdllogo = IMG_Load(ROMFS_DIR "sdl.png");
     if (!sdllogo) {
-        fprintf(stderr, "Couldn't load sdllogo: %s\n", SDL_GetError());
+        DEBUG_PRINTF("Couldn't load sdllogo: %s\n", SDL_GetError());
         return 1;
     }
 
     sdl_pos.w = sdllogo->w;
     sdl_pos.h = sdllogo->h;
+
+#ifdef SDL_SUPPORTS_TEXTURE
     sdllogo_tex = SDL_CreateTextureFromSurface(renderer, sdllogo);
     if (!sdllogo_tex) {
-        fprintf(stderr, "Couldn't load sdllogo_tex: %s\n", SDL_GetError());
+        DEBUG_PRINTF("Couldn't load sdllogo_tex: %s\n", SDL_GetError());
         return 1;
     }
     SDL_FreeSurface(sdllogo);
+#else
+    sdllogo_tex = sdllogo;
+#endif
 
 
     SDL_Surface* switchlogo = IMG_Load(ROMFS_DIR "switch.png");
     if (!switchlogo) {
-        fprintf(stderr, "Couldn't load switchlogo: %s\n", SDL_GetError());
+        DEBUG_PRINTF("Couldn't load switchlogo: %s\n", SDL_GetError());
         return 1;
     }
 
@@ -141,12 +140,17 @@ int main(void) {
     pos.y = SCREEN_H / 2 - switchlogo->h / 2;
     pos.w = switchlogo->w;
     pos.h = switchlogo->h;
+
+#ifdef SDL_SUPPORTS_TEXTURE
     switchlogo_tex = SDL_CreateTextureFromSurface(renderer, switchlogo);
     if (!switchlogo_tex) {
-        fprintf(stderr, "Couldn't load switchlogo_tex: %s\n", SDL_GetError());
+        DEBUG_PRINTF("Couldn't load switchlogo_tex: %s\n", SDL_GetError());
         return 1;
     }
     SDL_FreeSurface(switchlogo);
+#else
+    switchlogo_tex = switchlogo;
+#endif
 
 
     col = rand_range(0, 7);
@@ -158,7 +162,7 @@ int main(void) {
     // load font from romfs
     TTF_Font* font = TTF_OpenFont(ROMFS_DIR "LeroyLetteringLightBeta01.ttf", 36);
     if (!font) {
-        fprintf(stderr, "Couldn't load font: %s\n", SDL_GetError());
+        DEBUG_PRINTF("Couldn't load font: %s\n", SDL_GetError());
         return 1;
     }
 
@@ -166,7 +170,7 @@ int main(void) {
     SDL_Rect helloworld_rect = { 0, SCREEN_H - 36, 0, 0 };
     helloworld_tex = render_text(renderer, "Hello, world!", font, colors[1], &helloworld_rect);
     if (!helloworld_tex) {
-        fprintf(stderr, "Couldn't load helloworld_tex: %s\n", SDL_GetError());
+        DEBUG_PRINTF("Couldn't load helloworld_tex: %s\n", SDL_GetError());
         return 1;
     }
 
@@ -252,33 +256,35 @@ int main(void) {
         }
 
         if (!trail) {
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
-            SDL_RenderClear(renderer);
+            SDL_compat_clear(renderer, (SDL_Color){ 0, 0, 0, 0xFF });
         }
+        SDL_compat_clear(renderer, (SDL_Color){ 0xEE, 0xEE, 0xEE, 0xAF });
+
 
         // put logos on screen
-        SDL_RenderCopy(renderer, sdllogo_tex, NULL, &sdl_pos);
+        SDL_compat_render_texture(renderer, sdllogo_tex, NULL, &sdl_pos);
 
-
+#ifdef SDL_SUPPORTS_COLOR_MOD
         SDL_SetTextureColorMod(switchlogo_tex, colors[col].r, colors[col].g, colors[col].b);
-        SDL_RenderCopy(renderer, switchlogo_tex, NULL, &pos);
-
+        SDL_compat_render_texture(renderer, switchlogo_tex, NULL, &pos);
+#else
+        (void) col;
+#endif
 
         // put text on screen
-        SDL_RenderCopy(renderer, helloworld_tex, NULL, &helloworld_rect);
+        SDL_compat_render_texture(renderer, helloworld_tex, NULL, &helloworld_rect);
 
 
-        SDL_RenderPresent(renderer);
-
+        SDL_compat_present(renderer);
         SDL_Delay(wait);
     }
 
     // clean up your textures when you are done with them
-    SDL_DestroyTexture(sdllogo_tex);
+    SDL_COMPAT_TEXTURE_DESTROY(sdllogo_tex);
 
-    SDL_DestroyTexture(switchlogo_tex);
+    SDL_COMPAT_TEXTURE_DESTROY(switchlogo_tex);
 
-    SDL_DestroyTexture(helloworld_tex);
+    SDL_COMPAT_TEXTURE_DESTROY(helloworld_tex);
 
 
     // stop sounds and free loaded data

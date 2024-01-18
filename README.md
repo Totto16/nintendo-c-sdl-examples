@@ -1,8 +1,8 @@
-# Nintendo C++ SDL Examples
+# Nintendo C SDL Examples
 
 This are examples for all nintendo platforms using SDL (1.2 or 2)
 
-It uses devkirPro's devktiARM and decktiA64.
+It uses [devkitPro](https://devkitpro.org/)'s [devkitARM](https://devkitpro.org/wiki/devkitARM) and [devkitA64](https://switchbrew.org/wiki/Setting_up_Development_Environment).
 
 It uses meson and not Makefiles.
 
