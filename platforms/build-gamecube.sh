@@ -23,7 +23,7 @@ export PKG_CONFIG_PATH_2="$PORTLIBS_LIB_2/pkgconfig/"
 
 export ROMFS="romfs"
 
-export BUILD_DIR="build-wii"
+export BUILD_DIR="build-gamecube"
 
 export TOOL_PREFIX=powerpc-eabi
 
@@ -51,11 +51,11 @@ export COMPILE_FLAGS="'-isystem', '$LIBOGC/include'"
 
 export LINK_FLAGS="'-L$PORTLIBS_LIB', '-L$PORTLIBS_LIB_2','-L$LIBOGC_LIB'"
 
-export CROSS_FILE="./platforms/crossbuild-wii.ini"
+export CROSS_FILE="./platforms/crossbuild-gamecube.ini"
 
 cat <<EOF >"$CROSS_FILE"
 [host_machine]
-system = 'wii'
+system = 'gamecube'
 cpu_family = '$ARCH'
 cpu = '$CPU_VERSION'
 endian = 'big'

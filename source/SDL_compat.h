@@ -6,6 +6,7 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 
+
 #if defined(__SWITCH__)
 #include <switch.h>
 #endif
@@ -19,10 +20,15 @@
 #include <whb/proc.h>
 #endif
 
-
-#if defined(__wii__)
+#if defined(__WII__)
 #include <stdbool.h>
 #endif
+
+
+#if defined(__GAMECUBE__)
+#include <stdbool.h>
+#endif
+
 
 #ifdef _USE_SDL_LEGACY_VERSION
 
@@ -94,18 +100,22 @@ void platform_exit();
 #define GENERAL_MAIN_LOOP() appletMainLoop()
 #elif defined(__WIIU__)
 #define GENERAL_MAIN_LOOP() WHBProcIsRunning()
-#elif defined(__wii__)
+#elif defined(__WII__)
+#define GENERAL_MAIN_LOOP() true
+#elif defined(__GAMECUBE__)
 #define GENERAL_MAIN_LOOP() true
 #else
-#error not implemented
+#error "not implemented"
 #endif
 
 #if defined(__3DS__) || defined(__SWITCH__)
 #define ROMFS_DIR "romfs:/data/"
 #elif defined(__WIIU__)
 #define ROMFS_DIR "/content/data/"
-#elif defined(__wii__)
+#elif defined(__WII__)
+#define ROMFS_DIR "TODO"
+#elif defined(__GAMECUBE__)
 #define ROMFS_DIR "TODO"
 #else
-#error not implemented
+#error "not implemented"
 #endif
