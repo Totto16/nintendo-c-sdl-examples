@@ -33,7 +33,10 @@ foreach dep : switch_dependencies
     )
 endforeach
 
-library_dirs = meson.get_external_property('library_dirs')
+library_dirs = meson.get_external_property('library_dirs', [''])
+if library_dirs.length() == 0
+    error('property \'library_dirs\' has to be set!')
+endif
 
 c = meson.get_compiler('c')
 foreach dep : switch_dependencies_native
@@ -64,7 +67,7 @@ elf_file = build_target(
 )
 
 use_nacp = ['true', 'True', '1', true].contains(
-    meson.get_external_property('USE_NACP'),
+    meson.get_external_property('USE_NACP', ''),
 )
 
 
@@ -123,39 +126,43 @@ if use_nacp
 
 endif
 
+LIBNX = meson.get_external_property('libnx', '')
+if LIBNX == ''
+    error('property \'libnx\' has to be set!')
+endif
 
-default_icon = meson.get_external_property('libnx') / 'default_icon.jpg'
+default_icon = LIBNX / 'default_icon.jpg'
 
-app_icon = meson.get_external_property('APP_ICON', default_icon)
+APP_ICON = meson.get_external_property('APP_ICON', default_icon)
 
-if not fs.is_absolute(app_icon)
-    app_icon = meson.project_source_root() / app_icon
+if not fs.is_absolute(APP_ICON)
+    APP_ICON = meson.project_source_root() / APP_ICON
 endif
 
 
-if not fs.exists(app_icon)
-    error('APP_ICON should exist, but doesn\'t: \'' + app_icon + '\'')
-endif
-
-
-
-NRO_FLAGS += '--icon=' + app_icon
-
-
-romfs_dir = meson.get_external_property('romfs_dir')
-
-if not fs.is_absolute(romfs_dir)
-    romfs_dir = meson.project_source_root() / romfs_dir
-endif
-
-if not fs.exists(romfs_dir)
-    error('romfs_dir should exist, but doesn\'t: \'' + romfs_dir + '\'')
+if not fs.exists(APP_ICON)
+    error('APP_ICON should exist, but doesn\'t: \'' + APP_ICON + '\'')
 endif
 
 
 
+NRO_FLAGS += '--icon=' + APP_ICON
 
-NRO_FLAGS += '--romfsdir=' + romfs_dir
+
+APP_ROMFS = meson.get_external_property('APP_ROMFS', '')
+
+if APP_ROMFS != ''
+    if not fs.is_absolute(APP_ROMFS)
+        APP_ROMFS = meson.project_source_root() / APP_ROMFS
+    endif
+
+    if not fs.exists(APP_ROMFS)
+        error('APP_ROMFS should exist, but doesn\'t: \'' + APP_ROMFS + '\'')
+    endif
+
+    NRO_FLAGS += '--romfsdir=' + APP_ROMFS
+
+endif
 
 # elf2nro <exe_name>.elf <exe_name>.nro <NRO_FLAGS>
 custom_target(

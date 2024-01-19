@@ -85,12 +85,12 @@ cpp_link_args = [$COMMON_FLAGS, $LINK_FLAGS]
 pkg_config_libdir = '$PKG_CONFIG_PATH'
 needs_exe_wrapper = true
 library_dirs= ['$LIBNX_LIB', '$PORTLIBS_LIB']
-romfs_dir='$ROMFS'
 libnx='$LIBNX'
 
 APP_NAME	= 'sdl_example'
 APP_AUTHOR 	= 'Totto16'
 APP_VERSION = '1.0'
+APP_ROMFS='$ROMFS'
 
 # optional
 APP_TITLEID = ''

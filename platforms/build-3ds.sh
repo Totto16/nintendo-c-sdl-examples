@@ -87,12 +87,14 @@ cpp_link_args = [$COMMON_FLAGS, $LINK_FLAGS]
 pkg_config_libdir = '$PKG_CONFIG_PATH'
 needs_exe_wrapper = true
 library_dirs= ['$LIBCTRU_LIB', '$PORTLIBS_LIB']
-romfs_dir='$ROMFS'
 libctru='$LIBCTRU'
 
 APP_NAME	= 'sdl_example'
 APP_AUTHOR 	= 'Totto16'
 APP_DESC = 'SDL Example'
+APP_ROMFS='$ROMFS'
+
+USE_SMDH    = true
 
 EOF
 

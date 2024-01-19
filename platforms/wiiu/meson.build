@@ -99,7 +99,7 @@ if APP_ICON != ''
     if not fs.exists(APP_ICON)
         error('APP_ICON should exist, but doesn\'t: \'' + APP_ICON + '\'')
     endif
-    WUHB_FLAGS += ['--icon=' + app_icon]
+    WUHB_FLAGS += ['--icon=' + APP_ICON]
 endif
 
 APP_ROMFS = meson.get_external_property('APP_ROMFS', '')
