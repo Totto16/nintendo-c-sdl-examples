@@ -47,7 +47,9 @@ int rand_range(int min, int max) {
     return min + rand() / (RAND_MAX / (max - min + 1) + 1);
 }
 
-int main(void) {
+int main(int argc, char* argv[]) {
+    (void) argc;
+    (void) argv;
     platform_init();
 
     DEBUG_PRINTF("SDL_HELLO FROM HERE\n");

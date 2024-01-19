@@ -97,6 +97,9 @@ void debug_print(const char* text) {
     svcOutputDebugString(text, strlen(text));
 #elif defined(__WIIU__)
     OSReportWarn(text);
+#elif defined(__wii__)
+    //TODO
+    (void) text;
 #else
 #error not implemented
 #endif
@@ -111,6 +114,8 @@ void platform_init() {
     }
 #elif defined(__WIIU__)
     WHBProcInit();
+#elif defined(__wii__)
+    //TODO
 #else
 #error not implemented
 #endif
@@ -121,6 +126,8 @@ void platform_exit() {
     romfsExit();
 #elif defined(__WIIU__)
     WHBProcShutdown();
+#elif defined(__wii__)
+    //TODO
 #else
 #error not implemented
 #endif

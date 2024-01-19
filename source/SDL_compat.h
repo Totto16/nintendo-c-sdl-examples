@@ -20,6 +20,10 @@
 #endif
 
 
+#if defined(__wii__)
+#include <stdbool.h>
+#endif
+
 #ifdef _USE_SDL_LEGACY_VERSION
 
 
@@ -85,11 +89,13 @@ void platform_exit();
 
 
 #ifdef __3DS__
-#define GENERAL_MAIN_LOOP aptMainLoop
+#define GENERAL_MAIN_LOOP() aptMainLoop()
 #elif defined(__SWITCH__)
-#define GENERAL_MAIN_LOOP appletMainLoop
+#define GENERAL_MAIN_LOOP() appletMainLoop()
 #elif defined(__WIIU__)
-#define GENERAL_MAIN_LOOP WHBProcIsRunning
+#define GENERAL_MAIN_LOOP() WHBProcIsRunning()
+#elif defined(__wii__)
+#define GENERAL_MAIN_LOOP() true
 #else
 #error not implemented
 #endif
@@ -98,6 +104,8 @@ void platform_exit();
 #define ROMFS_DIR "romfs:/data/"
 #elif defined(__WIIU__)
 #define ROMFS_DIR "/content/data/"
+#elif defined(__wii__)
+#define ROMFS_DIR "TODO"
 #else
 #error not implemented
 #endif
