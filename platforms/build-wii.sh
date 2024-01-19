@@ -44,8 +44,8 @@ export OBJCOPY="$COMPILER_BIN/$TOOL_PREFIX-objcopy"
 export STRIP="$COMPILER_BIN/$TOOL_PREFIX-strip"
 
 export ARCH=ppc
-export CPU_VERSION=ppc
-export COMMON_FLAGS="'-D__wii__', '-ffunction-sections', '-m${OGC_MACHINE}','-DGEKKO','-mcpu=750','-meabi','-mhard-float'"
+export CPU_VERSION=ppc750
+export COMMON_FLAGS="'-D__WII__', '-ffunction-sections', '-m${OGC_MACHINE}','-DGEKKO','-mcpu=750','-meabi','-mhard-float', '-fdata-sections'"
 
 export COMPILE_FLAGS="'-isystem', '$LIBOGC/include'"
 
@@ -58,7 +58,7 @@ cat <<EOF >"$CROSS_FILE"
 system = 'wii'
 cpu_family = '$ARCH'
 cpu = '$CPU_VERSION'
-endian = 'little'
+endian = 'big'
 
 [constants]
 devkitpro = '$DEVKITPRO'

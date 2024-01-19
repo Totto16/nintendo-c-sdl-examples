@@ -37,8 +37,8 @@ export OBJCOPY="$COMPILER_BIN/$TOOL_PREFIX-objcopy"
 export STRIP="$COMPILER_BIN/$TOOL_PREFIX-strip"
 
 export ARCH=aarch64
-export ARM_VERSION=armv8-a
-export COMMON_FLAGS="'-D__SWITCH__','-ffunction-sections','-fdata-sections'"
+export CPU_ARCH=cortex-a57
+export COMMON_FLAGS="'-D__SWITCH__','-ffunction-sections','-fdata-sections','-ftls-model=local-exec'"
 
 export COMPILE_FLAGS="'-march=armv8-a+crc+crypto','-mtune=cortex-a57','-mtp=soft','-ftls-model=local-exec','-fPIC', '-isystem', '$LIBNX/include'"
 
@@ -50,7 +50,7 @@ cat <<EOF >"$CROSS_FILE"
 [host_machine]
 system = 'switch'
 cpu_family = '$ARCH'
-cpu = '$ARM_VERSION'
+cpu = '$CPU_ARCH'
 endian = 'little'
 
 [constants]

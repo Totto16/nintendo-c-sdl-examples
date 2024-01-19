@@ -37,12 +37,11 @@ export NM="$COMPILER_BIN/$TOOL_PREFIX-gcc-nm"
 export OBJCOPY="$COMPILER_BIN/$TOOL_PREFIX-objcopy"
 export STRIP="$COMPILER_BIN/$TOOL_PREFIX-strip"
 
-
 export ARCH=arm
-export ARM_VERSION=armv6k
-export COMMON_FLAGS="'-D__3DS__','-mword-relocations', '-ffunction-sections','-mword-relocations'"
+export ARM_VERSION=arm11mpcore
+export COMMON_FLAGS="'-D__3DS__','-mword-relocations', '-ffunction-sections', '-fdata-sections'"
 
-export COMPILE_FLAGS="'-march=armv6k','-mtune=mpcore','-mfloat-abi=hard', '-mtp=soft','-fPIC', '-isystem', '$LIBCTRU/include'"
+export COMPILE_FLAGS="'-march=armv6k','-mtune=mpcore','-mfloat-abi=hard', '-mtp=soft', '-isystem', '$LIBCTRU/include'"
 
 export LINK_FLAGS="'-L$PORTLIBS_LIB','-L$LIBCTRU_LIB','-fPIE','-specs=$ARCH_DEVKIT_FOLDER/$TOOL_PREFIX/lib/3dsx.specs'"
 

@@ -7,23 +7,27 @@ export ARCH_DEVKIT_FOLDER="$DEVKITPRO/devkitPPC"
 export COMPILER_BIN="$ARCH_DEVKIT_FOLDER/bin"
 export PATH="$DEVKITPRO/tools/bin:$COMPILER_BIN:$PATH"
 
-export PORTLIBS_PATH="$DEVKITPRO/portlibs"
-export LIBWUT=$DEVKITPRO/wut
+export OGC_CONSOLE="gamecube"
+export OGC_SUBDIR="cube"
+export OGC_MACHINE="ogc"
 
-export PORTLIBS_LIB=$PORTLIBS_PATH/wiiu/lib
+export PORTLIBS_PATH="$DEVKITPRO/portlibs"
+export LIBOGC=$DEVKITPRO/libogc
+
+export PORTLIBS_LIB=$PORTLIBS_PATH/$OGC_CONSOLE/lib
 export PORTLIBS_LIB_2=$PORTLIBS_PATH/ppc/lib
-export LIBWUT_LIB=$LIBWUT/lib
+export LIBOGC_LIB="$LIBOGC/lib/$OGC_SUBDIR"
 
 export PKG_CONFIG_PATH="$PORTLIBS_LIB/pkgconfig/"
 export PKG_CONFIG_PATH_2="$PORTLIBS_LIB_2/pkgconfig/"
 
 export ROMFS="romfs"
 
-export BUILD_DIR="build-wiiu"
+export BUILD_DIR="build-wii"
 
 export TOOL_PREFIX=powerpc-eabi
 
-export BIN_DIR="$PORTLIBS_PATH/wiiu/bin"
+export BIN_DIR="$PORTLIBS_PATH/gamecube/bin"
 export BIN_DIR_2="$PORTLIBS_PATH/ppc/bin"
 export PKG_CONFIG_EXEC=$BIN_DIR/$TOOL_PREFIX-pkg-config
 export CMAKE="$BIN_DIR/$TOOL_PREFIX-cmake"
@@ -41,17 +45,17 @@ export STRIP="$COMPILER_BIN/$TOOL_PREFIX-strip"
 
 export ARCH=ppc
 export CPU_VERSION=ppc750
-export COMMON_FLAGS="'-D__WIIU__', '-D__WUT__', '-ffunction-sections', '-DESPRESSO','-mcpu=750','-meabi','-mhard-float', '-fdata-sections'"
+export COMMON_FLAGS="'-D__GAMECUBE__', '-ffunction-sections', '-m${OGC_MACHINE}','-DGEKKO','-mcpu=750','-meabi','-mhard-float','-ffunction-sections','-fdata-sections'"
 
-export COMPILE_FLAGS="'-isystem', '$LIBWUT/include'"
+export COMPILE_FLAGS="'-isystem', '$LIBOGC/include'"
 
-export LINK_FLAGS="'-L$PORTLIBS_LIB', '-L$PORTLIBS_LIB_2','-L$LIBWUT_LIB','-specs=$DEVKITPRO/wut/share/wut.specs'"
+export LINK_FLAGS="'-L$PORTLIBS_LIB', '-L$PORTLIBS_LIB_2','-L$LIBOGC_LIB'"
 
-export CROSS_FILE="./platforms/crossbuild-wiiu.ini"
+export CROSS_FILE="./platforms/crossbuild-wii.ini"
 
 cat <<EOF >"$CROSS_FILE"
 [host_machine]
-system = 'wiiu'
+system = 'wii'
 cpu_family = '$ARCH'
 cpu = '$CPU_VERSION'
 endian = 'big'
@@ -69,7 +73,7 @@ strip   = '$STRIP'
 objcopy = '$OBJCOPY'
 nm = '$NM'
 pkg-config = '$PKG_CONFIG_EXEC'
-cmake='false' # cmake has many errors on the wiiu port
+cmake='$CMAKE' 
 freetype-config='$BIN_DIR_2/freetype-config'
 libpng16-config='$BIN_DIR_2/libpng16-config'
 libpng-config='$BIN_DIR_2/libpng-config'
@@ -87,15 +91,7 @@ cpp_link_args = [$COMMON_FLAGS, $LINK_FLAGS]
 [properties]
 pkg_config_libdir = '$PKG_CONFIG_PATH:$PKG_CONFIG_PATH_2'
 needs_exe_wrapper = true
-library_dirs= ['$LIBWUT_LIB', '$PORTLIBS_LIB','$PORTLIBS_LIB_2']
-
-APP_NAME	= 'sdl_example'
-APP_AUTHOR 	= 'Totto16'
-APP_ROMFS='$ROMFS'
-
-# optional
-APP_SHORT_NAME	= ''
-
+library_dirs= ['$LIBOGC_LIB', '$PORTLIBS_LIB','$PORTLIBS_LIB_2']
 
 EOF
 
