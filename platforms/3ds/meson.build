@@ -19,6 +19,7 @@ _3ds_dependencies_native = [
     'mikmod',
     'modplug',
     'png16',
+    'SDL2main'
 ]
 
 

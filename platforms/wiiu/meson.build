@@ -11,10 +11,11 @@ wiiu_dependencies = [
 ]
 
 wiiu_dependencies_native = [
-    'wut',
     'bz2',
-    'png16',
     'modplug',
+    'png16',
+    'SDL2main',
+    'wut',
 ]
 
 

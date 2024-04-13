@@ -22,6 +22,7 @@ switch_dependencies_native = [
     'modplug',
     'nx',
     'png16',
+    'SDL2main',
 ]
 
 

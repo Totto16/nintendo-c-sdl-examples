@@ -15,6 +15,7 @@ gamecube_dependencies_native = [
     'modplug',
     'ogc',
     'png16',
+    'SDL2main',
 ]
 
 

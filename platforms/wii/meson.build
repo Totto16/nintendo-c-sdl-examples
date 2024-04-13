@@ -12,16 +12,17 @@ wii_dependencies = [
 ]
 
 wii_dependencies_native = [
-    'wiiuse',
     'bte',
-    'wiikeyboard',
     'bz2',
-    'ogc',
-    'm',
     'fat',
-    'png16',
-    'modplug',
     'jpeg',
+    'm',
+    'modplug',
+    'ogc',
+    'png16',
+    'SDL2main',
+    'wiikeyboard',
+    'wiiuse',
 ]
 
 
