@@ -103,11 +103,8 @@ library_dirs= ['$LIBWUT_LIB', '$PORTLIBS_LIB_WIIU','$PORTLIBS_LIB_PPC']
 
 APP_NAME	= 'sdl_example'
 APP_AUTHOR 	= 'Totto16'
+
 APP_ROMFS='$ROMFS'
-
-# optional
-APP_SHORT_NAME	= ''
-
 
 EOF
 

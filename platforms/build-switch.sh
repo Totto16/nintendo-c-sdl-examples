@@ -99,12 +99,10 @@ libnx='$LIBNX'
 APP_NAME	= 'sdl_example'
 APP_AUTHOR 	= 'Totto16'
 APP_VERSION = '1.0'
-APP_ROMFS='$ROMFS'
-
-# optional
-APP_TITLEID = ''
 
 USE_NACP    = true
+
+APP_ROMFS='$ROMFS'
 
 EOF
 

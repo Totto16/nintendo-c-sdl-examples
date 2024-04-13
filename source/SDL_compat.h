@@ -37,15 +37,17 @@ void platform_init();
 
 void platform_exit();
 
+#define DEBUG_TAG "<CUSTOM_DEBUG>: "
+
 #define DEBUG_PRINTF(...)                                             \
     do {                                                              \
         char* internalBuffer = NULL;                                  \
-        int toWrite = snprintf(NULL, 0, __VA_ARGS__) + 1;             \
+        int toWrite = snprintf(NULL, 0, DEBUG_TAG __VA_ARGS__) + 1;             \
         internalBuffer = (char*) malloc(toWrite * sizeof(char));      \
         if (internalBuffer == NULL) {                                 \
             exit(200);                                                \
         }                                                             \
-        int written = snprintf(internalBuffer, toWrite, __VA_ARGS__); \
+        int written = snprintf(internalBuffer, toWrite, DEBUG_TAG __VA_ARGS__); \
         if (written >= toWrite) {                                     \
             free(internalBuffer);                                     \
             exit(201);                                                \

@@ -161,7 +161,7 @@ endif
 
 
 
-APP_ROMFS = meson.get_external_property('romfs_dir', '')
+APP_ROMFS = meson.get_external_property('APP_ROMFS', '')
 
 if APP_ROMFS != ''
 

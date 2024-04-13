@@ -101,9 +101,10 @@ libctru='$LIBCTRU'
 APP_NAME	= 'sdl_example'
 APP_AUTHOR 	= 'Totto16'
 APP_DESC = 'SDL Example'
-APP_ROMFS='$ROMFS'
 
 USE_SMDH    = true
+
+APP_ROMFS='$ROMFS'
 
 EOF
 
