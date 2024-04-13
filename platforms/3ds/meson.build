@@ -4,6 +4,7 @@
 _3ds_dependencies = [
     'flac',
     'freetype2',
+    'harfbuzz',
     'mikmod',
     'modplug',
     'ogg',

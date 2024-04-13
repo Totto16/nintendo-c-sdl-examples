@@ -2,6 +2,7 @@
 # libraries
 
 switch_dependencies = [
+    'harfbuzz',
     'egl',
     'flac',
     'freetype2',

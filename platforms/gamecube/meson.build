@@ -3,6 +3,7 @@
 
 gamecube_dependencies = [
     'freetype2',
+    'harfbuzz',
     'ogg',
     'vorbis',
     'vorbisfile',

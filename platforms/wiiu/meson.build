@@ -3,10 +3,11 @@
 
 wiiu_dependencies = [
     'freetype2',
-    'zlib',
-    'vorbisfile',
-    'vorbis',
+    'harfbuzz',
     'ogg',
+    'vorbis',
+    'vorbisfile',
+    'zlib',
 ]
 
 wiiu_dependencies_native = [

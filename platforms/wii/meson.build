@@ -3,11 +3,12 @@
 
 wii_dependencies = [
     'freetype2',
-    'zlib',
-    'vorbisfile',
-    'vorbis',
+    'harfbuzz',
     'ogg',
+    'vorbis',
+    'vorbisfile',
     'vorbisidec',
+    'zlib',
 ]
 
 wii_dependencies_native = [
