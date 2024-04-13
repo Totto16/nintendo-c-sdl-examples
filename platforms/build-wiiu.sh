@@ -19,6 +19,7 @@ export LIBWUT_LIB="$LIBWUT/lib"
 
 export PKG_CONFIG_PATH_WIIU="$PORTLIBS_LIB_WIIU/pkgconfig/"
 export PKG_CONFIG_PATH_PPC="$PORTLIBS_LIB_PPC/pkgconfig/"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH_WIIU:$PKG_CONFIG_PATH_PPC"
 
 export ROMFS="romfs"
 
@@ -47,7 +48,6 @@ export CPU_VERSION="ppc750"
 export ENDIANESS="big"
 
 export COMMON_FLAGS="'-mcpu=750','-meabi','-mhard-float','-ffunction-sections','-fdata-sections'"
-
 
 export COMPILE_FLAGS="'-DESPRESSO','-D__WIIU__','-D__WUT__','-isystem', '$LIBWUT/include', '-I$PORTLIBS_PATH_WIIU/include', '-I$PORTLIBS_PATH_PPC/include'"
 
@@ -97,7 +97,7 @@ cpp_link_args = [$COMMON_FLAGS, $LINK_FLAGS]
 
 
 [properties]
-pkg_config_libdir = '$PKG_CONFIG_PATH_WIIU:$PKG_CONFIG_PATH_PPC'
+pkg_config_libdir = '$PKG_CONFIG_PATH'
 needs_exe_wrapper = true
 library_dirs= ['$LIBWUT_LIB', '$PORTLIBS_LIB_WIIU','$PORTLIBS_LIB_PPC']
 

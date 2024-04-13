@@ -23,6 +23,7 @@ export LIBOGC_LIB="$LIBOGC/lib/$OGC_SUBDIR"
 
 export PKG_CONFIG_PATH_OGC="$PORTLIBS_LIB_OGC/pkgconfig/"
 export PKG_CONFIG_PATH_PPC="$PORTLIBS_LIB_PPC/pkgconfig/"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH_OGC:$PKG_CONFIG_PATH_PPC"
 
 export ROMFS="romfs"
 
@@ -100,7 +101,7 @@ cpp_link_args = [$COMMON_FLAGS, $LINK_FLAGS]
 
 
 [properties]
-pkg_config_libdir = '$PKG_CONFIG_PATH_OGC:$PKG_CONFIG_PATH_PPC'
+pkg_config_libdir = '$PKG_CONFIG_PATH'
 needs_exe_wrapper = true
 library_dirs= ['$LIBOGC_LIB', '$PORTLIBS_LIB_OGC','$PORTLIBS_LIB_PPC']
 

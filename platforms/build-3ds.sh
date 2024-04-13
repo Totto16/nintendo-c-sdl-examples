@@ -2,6 +2,107 @@
 
 set -e
 
+## build sdl2 and libraries (ttf, mixer, image)
+
+export SDL_TOP_BUILD_DIR="SDL2_local_build_3ds"
+export SDL_BUILD_DIR="build_dir"
+
+export SDL_ROOT_DIR="$(pwd)/$SDL_TOP_BUILD_DIR/root/usr"
+
+mkdir -p "$SDL_TOP_BUILD_DIR"
+
+cd "$SDL_TOP_BUILD_DIR" || exit 1
+
+echo "*" >.gitignore
+
+mkdir -p "$SDL_ROOT_DIR"
+
+# build sdl2
+
+export SDL2_SRC_DIR="SDL2-2.28.5"
+
+if [ ! -d "$SDL2_SRC_DIR" ]; then
+
+    wget "https://github.com/libsdl-org/SDL/releases/download/release-2.28.5/SDL2-2.28.5.tar.gz"
+    tar xzf SDL2-2.28.5.tar.gz
+    rm -rf SDL2-2.28.5.tar.gz
+
+    cd $SDL2_SRC_DIR
+
+    cmake -S. "-B$SDL_BUILD_DIR" -DCMAKE_TOOLCHAIN_FILE="$DEVKITPRO/cmake/3DS.cmake" -DCMAKE_BUILD_TYPE=Release "-DCMAKE_INSTALL_PREFIX=$SDL_ROOT_DIR/"
+    cmake --build "$SDL_BUILD_DIR"
+    cmake --install "$SDL_BUILD_DIR" --prefix "$SDL_ROOT_DIR/"
+
+    cd ..
+
+fi
+
+export SDL_CMAKE_DIR="$SDL_ROOT_DIR/lib/cmake/SDL2"
+
+# build sdl2_ttf
+
+export SDL2_TTF_SRC_DIR="SDL2_ttf-2.22.0"
+
+if [ ! -d "$SDL2_TTF_SRC_DIR" ]; then
+
+    wget "https://github.com/libsdl-org/SDL_ttf/releases/download/release-2.22.0/SDL2_ttf-2.22.0.tar.gz"
+    tar xzf SDL2_ttf-2.22.0.tar.gz
+    rm -rf SDL2_ttf-2.22.0.tar.gz
+
+    cd $SDL2_TTF_SRC_DIR
+
+    cmake -S. "-B$SDL_BUILD_DIR" -DCMAKE_TOOLCHAIN_FILE="$DEVKITPRO/cmake/3DS.cmake" -DCMAKE_BUILD_TYPE=Release "-DSDL2_DIR=$SDL_CMAKE_DIR" "-DSDL2TTF_SAMPLES=OFF" "-DCMAKE_INSTALL_PREFIX=$SDL_ROOT_DIR/"
+    cmake --build "$SDL_BUILD_DIR"
+    cmake --install "$SDL_BUILD_DIR" --prefix "$SDL_ROOT_DIR/"
+
+    cd ..
+
+fi
+
+# build sdl2_mixer
+
+export SDL2_MIXER_SRC_DIR="SDL2_mixer-2.8.0"
+
+if [ ! -d "$SDL2_MIXER_SRC_DIR" ]; then
+
+    wget "https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.8.0/SDL2_mixer-2.8.0.tar.gz"
+    tar xzf SDL2_mixer-2.8.0.tar.gz
+    rm -rf SDL2_mixer-2.8.0.tar.gz
+
+    cd $SDL2_MIXER_SRC_DIR
+
+    cmake -S. "-B$SDL_BUILD_DIR" -DCMAKE_TOOLCHAIN_FILE="$DEVKITPRO/cmake/3DS.cmake" -DCMAKE_BUILD_TYPE=Release "-DSDL2_DIR=$SDL_CMAKE_DIR" "-DSDL2MIXER_DEPS_SHARED=OFF" "-DSDL2MIXER_MIDI=OFF" "-DSDL2MIXER_WAVPACK=OFF" "-DCMAKE_INSTALL_PREFIX=$SDL_ROOT_DIR/"
+    cmake --build "$SDL_BUILD_DIR"
+    cmake --install "$SDL_BUILD_DIR" --prefix "$SDL_ROOT_DIR/"
+
+    cd ..
+
+fi
+
+# build sdl2_image
+
+export SDL2_IMAGE_SRC_DIR="SDL2_image-2.8.2"
+
+if [ ! -d "$SDL2_IMAGE_SRC_DIR" ]; then
+
+    wget "https://github.com/libsdl-org/SDL_image/releases/download/release-2.8.2/SDL2_image-2.8.2.tar.gz"
+    tar xzf SDL2_image-2.8.2.tar.gz
+    rm -rf SDL2_image-2.8.2.tar.gz
+
+    cd $SDL2_IMAGE_SRC_DIR
+
+    cmake -S. "-B$SDL_BUILD_DIR" -DCMAKE_TOOLCHAIN_FILE="$DEVKITPRO/cmake/3DS.cmake" -DCMAKE_BUILD_TYPE=Release "-DSDL2_DIR=$SDL_CMAKE_DIR" "-DCMAKE_INSTALL_PREFIX=$SDL_ROOT_DIR/"
+    cmake --build "$SDL_BUILD_DIR"
+    cmake --install "$SDL_BUILD_DIR" --prefix "$SDL_ROOT_DIR/"
+
+    cd ..
+
+fi
+
+# exit the build tree
+
+cd ..
+
 export DEVKITPRO="/opt/devkitpro"
 export ARCH_DEVKIT_FOLDER="$DEVKITPRO/devkitARM"
 export COMPILER_BIN="$ARCH_DEVKIT_FOLDER/bin"
@@ -15,7 +116,9 @@ export LIBCTRU="$DEVKITPRO/libctru"
 export PORTLIBS_LIB="$PORTLIBS_PATH_3DS/lib"
 export LIBCTRU_LIB="$LIBCTRU/lib"
 
-export PKG_CONFIG_PATH="$PORTLIBS_LIB/pkgconfig/"
+export PKG_CONFIG_PATH_PORTLIB="$PORTLIBS_LIB/pkgconfig/"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH_PORTLIB:$SDL_ROOT_DIR/lib/pkgconfig/"
+
 
 export ROMFS="romfs"
 
@@ -80,7 +183,7 @@ cmake='$CMAKE'
 freetype-config='$BIN_DIR/freetype-config'
 libpng16-config='$BIN_DIR/libpng16-config'
 libpng-config='$BIN_DIR/libpng-config'
-sdl-config='$BIN_DIR/sdl-config'
+sdl2-config='$SDL_ROOT_DIR/bin/sdl2-config'
 
 [built-in options]
 c_std = 'c11'
