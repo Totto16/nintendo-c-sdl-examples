@@ -189,6 +189,12 @@ int main(int argc, char* argv[]) {
 
     if (music) {
         Mix_PlayMusic(music, -1);
+    } else {
+#ifndef NO_ROMFS_SUPPORT
+        DEBUG_PRINTF("Couldn't load music: %s\n", SDL_GetError());
+#else
+        DEBUG_PRINTF("Couldn't load music: have no ROMFS support\n");
+#endif
     }
 
     while (!exit_requested && GENERAL_MAIN_LOOP()) {
