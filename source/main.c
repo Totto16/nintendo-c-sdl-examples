@@ -269,7 +269,7 @@ int main(int argc, char* argv[]) {
         }
 
         if (!trail) {
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+            SDL_SetRenderDrawColor(renderer, 0x44, 0x44, 0x44, 0xFF);
         } else {
             SDL_SetRenderDrawColor(renderer, 0xEE, 0xEE, 0xEE, 0xAF);
         }
