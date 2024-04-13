@@ -1,9 +1,28 @@
 
 # libraries
 
-wii_dependencies = ['freetype2', 'zlib', 'libpng16', 'vorbisfile', 'vorbis', 'ogg', 'libmodplug']
+wii_dependencies = [
+    'freetype2',
+    'zlib',
+    'libpng16',
+    'vorbisfile',
+    'vorbis',
+    'ogg',
+    'libmodplug',
+    'libjpeg',
+    'vorbisidec',
+]
 
-wii_dependencies_native = ['wiiuse', 'bte', 'bz2', 'ogc']
+wii_dependencies_native = [
+    'wiiuse',
+    'bte',
+    'wiikeyboard',
+    'bz2',
+    'ogc',
+    'm',
+    'fat',
+]
+
 
 
 foreach dep : wii_dependencies
