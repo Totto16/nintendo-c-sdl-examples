@@ -4,14 +4,10 @@
 _3ds_dependencies = [
     'flac',
     'freetype2',
-    'harfbuzz',
-    'mikmod',
-    'modplug',
     'ogg',
     'ogg',
     'opus',
     'opusfile',
-    'png16',
     'vorbisidec',
     'zlib',
 ]
@@ -20,6 +16,9 @@ _3ds_dependencies_native = [
     'bz2',
     'ctru',
     'mad',
+    'mikmod',
+    'modplug',
+    'png16',
 ]
 
 
