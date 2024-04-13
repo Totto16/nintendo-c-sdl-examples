@@ -1,11 +1,19 @@
 
 # libraries
 
-wiiu_dependencies = ['freetype2', 'zlib', 'libpng16', 'vorbisfile', 'vorbis', 'ogg', 'libmodplug']
+wiiu_dependencies = [
+    'freetype2',
+    'zlib',
+    'vorbisfile',
+    'vorbis',
+    'ogg',
+]
 
 wiiu_dependencies_native = [
     'wut',
     'bz2',
+    'png16',
+    'modplug',
 ]
 
 
@@ -124,3 +132,6 @@ custom_target(
     output: [exe_name + '.wuhb'],
     build_by_default: true,
 )
+
+
+##TODO: wuhb doesn't seem to be exeuctable, but rpx seems to be ?

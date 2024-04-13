@@ -4,12 +4,9 @@
 wii_dependencies = [
     'freetype2',
     'zlib',
-    'libpng16',
     'vorbisfile',
     'vorbis',
     'ogg',
-    'libmodplug',
-    'libjpeg',
     'vorbisidec',
 ]
 
@@ -21,6 +18,9 @@ wii_dependencies_native = [
     'ogc',
     'm',
     'fat',
+    'png16',
+    'modplug',
+    'jpeg',
 ]
 
 

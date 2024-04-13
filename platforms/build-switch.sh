@@ -2,16 +2,17 @@
 
 set -e
 
-export DEVKITPRO=/opt/devkitpro
+export DEVKITPRO="/opt/devkitpro"
 export ARCH_DEVKIT_FOLDER="$DEVKITPRO/devkitA64"
 export COMPILER_BIN="$ARCH_DEVKIT_FOLDER/bin"
 export PATH="$DEVKITPRO/tools/bin:$COMPILER_BIN:$PATH"
 
 export PORTLIBS_PATH="$DEVKITPRO/portlibs"
-export LIBNX=$DEVKITPRO/libnx
+export PORTLIBS_PATH_SWITCH="$PORTLIBS_PATH/switch"
+export LIBNX="$DEVKITPRO/libnx"
 
-export PORTLIBS_LIB=$PORTLIBS_PATH/switch/lib
-export LIBNX_LIB=$LIBNX/lib
+export PORTLIBS_LIB="$PORTLIBS_PATH_SWITCH/lib"
+export LIBNX_LIB="$LIBNX/lib"
 
 export PKG_CONFIG_PATH="$PORTLIBS_LIB/pkgconfig/"
 
@@ -19,10 +20,10 @@ export ROMFS="romfs"
 
 export BUILD_DIR="build-switch"
 
-export TOOL_PREFIX=aarch64-none-elf
+export TOOL_PREFIX="aarch64-none-elf"
 
-export BIN_DIR="$PORTLIBS_PATH/switch/bin"
-export PKG_CONFIG_EXEC=$BIN_DIR/$TOOL_PREFIX-pkg-config
+export BIN_DIR="$PORTLIBS_PATH_SWITCH/bin"
+export PKG_CONFIG_EXEC="$BIN_DIR/$TOOL_PREFIX-pkg-config"
 export CMAKE="$BIN_DIR/$TOOL_PREFIX-cmake"
 
 export PATH="$BIN_DIR:$PATH"
@@ -36,11 +37,13 @@ export NM="$COMPILER_BIN/$TOOL_PREFIX-gcc-nm"
 export OBJCOPY="$COMPILER_BIN/$TOOL_PREFIX-objcopy"
 export STRIP="$COMPILER_BIN/$TOOL_PREFIX-strip"
 
-export ARCH=aarch64
-export CPU_ARCH=cortex-a57
-export COMMON_FLAGS="'-D__SWITCH__','-ffunction-sections','-fdata-sections','-ftls-model=local-exec'"
+export ARCH="aarch64"
+export CPU_ARCH="cortex-a57"
+export ENDIANESS="little"
 
-export COMPILE_FLAGS="'-march=armv8-a+crc+crypto','-mtune=cortex-a57','-mtp=soft','-ftls-model=local-exec','-fPIC', '-isystem', '$LIBNX/include'"
+export COMMON_FLAGS="'-ftls-model=local-exec','-march=armv8-a+crc+crypto','-mtune=cortex-a57','-mtp=soft','-ftls-model=local-exec','-fPIC','-ffunction-sections','-fdata-sections'"
+
+export COMPILE_FLAGS="'-D__SWITCH__','-isystem','$LIBNX/include','-I$PORTLIBS_PATH_SWITCH/include'"
 
 export LINK_FLAGS="'-L$PORTLIBS_LIB','-L$LIBNX_LIB','-fPIE','-specs=$DEVKITPRO/libnx/switch.specs'"
 
@@ -51,7 +54,13 @@ cat <<EOF >"$CROSS_FILE"
 system = 'switch'
 cpu_family = '$ARCH'
 cpu = '$CPU_ARCH'
-endian = 'little'
+endian = '$ENDIANESS'
+
+[target_machine]
+system = 'switch'
+cpu_family = '$ARCH'
+cpu = '$CPU_ARCH'
+endian = '$ENDIANESS'
 
 [constants]
 devkitpro = '$DEVKITPRO'

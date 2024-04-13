@@ -3,15 +3,18 @@
 
 gamecube_dependencies = [
     'freetype2',
-    'zlib',
-    'libpng16',
-    'vorbisfile',
-    'vorbis',
     'ogg',
-    'libmodplug',
+    'vorbis',
+    'vorbisfile',
+    'zlib',
 ]
 
-gamecube_dependencies_native = ['bz2', 'ogc']
+gamecube_dependencies_native = [
+    'bz2',
+    'modplug',
+    'ogc',
+    'png16',
+]
 
 
 foreach dep : gamecube_dependencies

@@ -3,24 +3,24 @@
 
 switch_dependencies = [
     'egl',
-    'glesv2',
-    'glapi',
-    'libdrm_nouveau',
-    'freetype2',
-    'zlib',
-    'libpng16',
-    'opusfile',
-    'opus',
-    'vorbisfile',
-    'vorbis',
-    'ogg',
-    'libmodplug',
     'flac',
+    'freetype2',
+    'glapi',
+    'glesv2',
+    'ogg',
+    'opus',
+    'opusfile',
+    'vorbis',
+    'vorbisfile',
+    'zlib',
 ]
 
 switch_dependencies_native = [
-    'nx',
     'bz2',
+    'drm_nouveau',
+    'modplug',
+    'nx',
+    'png16',
 ]
 
 

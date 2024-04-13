@@ -2,20 +2,24 @@
 # libraries
 
 _3ds_dependencies = [
-    'freetype2',
-    'libpng16',
-    'opusfile',
-    'opus',
-    'ogg',
-    'libmodplug',
     'flac',
-    'zlib',
-    'vorbisidec',
+    'freetype2',
+    'mikmod',
+    'modplug',
     'ogg',
-    'libmikmod',
+    'ogg',
+    'opus',
+    'opusfile',
+    'png16',
+    'vorbisidec',
+    'zlib',
 ]
 
-_3ds_dependencies_native = ['ctru', 'bz2', 'libmad']
+_3ds_dependencies_native = [
+    'bz2',
+    'ctru',
+    'mad',
+]
 
 
 library_dirs = meson.get_external_property('library_dirs', [''])
@@ -131,7 +135,10 @@ if use_smdh
 
 
         if not fs.exists(small_app_icon)
-            error('APP_SMALL_ICON should exist, but doesn\'t: \'' + small_app_icon + '\'')
+            error(
+                'APP_SMALL_ICON should exist, but doesn\'t: \'' + small_app_icon +
+                '\'',
+            )
         endif
 
         SMDH_FLAGS += small_app_icon

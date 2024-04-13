@@ -25,17 +25,24 @@ if not meson.is_cross_build()
     error('This is only designed, to be a cross-build')
 endif
 
-use_upstream_sdl = false
 
-if host_machine.system() == 'switch'
-    use_upstream_sdl = true
+if (
+    not (
+        host_machine.system() == 'switch'
+        or host_machine.system() == 'wiiu'
+        or host_machine.system() == '3ds'
+        or host_machine.system() == 'wii'
+        or host_machine.system() == 'gamecube'
+    )
+)
+    error('Not supported host system: \'' + host_machine.system() + '\'')
 endif
 
 
 deps += dependency(
     'sdl2',
-    'SDl2',
-    allow_fallback: not use_upstream_sdl,
+    'SDL2',
+    allow_fallback: false,
     required: true,
     native: false,
 )
@@ -43,7 +50,7 @@ deps += dependency(
 deps += dependency(
     'sdl2_ttf',
     'SDL2_ttf',
-    allow_fallback: not use_upstream_sdl,
+    allow_fallback: false,
     required: true,
     native: false,
 )
@@ -51,7 +58,7 @@ deps += dependency(
 deps += dependency(
     'sdl2_mixer',
     'SDL2_mixer',
-    allow_fallback: not use_upstream_sdl,
+    allow_fallback: false,
     required: true,
     native: false,
 )
@@ -59,7 +66,7 @@ deps += dependency(
 deps += dependency(
     'sdl2_image',
     'SDL2_image',
-    allow_fallback: not use_upstream_sdl,
+    allow_fallback: false,
     required: true,
     native: false,
 )
@@ -84,5 +91,5 @@ elif meson.is_cross_build() and host_machine.system() == 'wii'
 elif meson.is_cross_build() and host_machine.system() == 'gamecube'
     subdir('platforms/gamecube')
 else
-    error('Not implemnted for host system: \'' + host_machine.system() + '\'')
+    error('Not implemented for host system: \'' + host_machine.system() + '\'')
 endif
