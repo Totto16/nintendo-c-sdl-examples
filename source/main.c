@@ -24,11 +24,8 @@
 #include <time.h>
 #include <unistd.h>
 
+
 #include "SDL_compat.h"
-
-
-#define SCREEN_W 1280
-#define SCREEN_H 720
 
 
 int rand_range(int min, int max) {
@@ -93,9 +90,16 @@ int main(int argc, char* argv[]) {
     platform_init();
 
     SDL_Window* window = SDL_CreateWindow(
-            "sdl2+mixer+image+ttf demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_W, SCREEN_H,
-            SDL_WINDOW_SHOWN
+            "sdl2+mixer+image+ttf demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0,
+            SDL_WINDOW_FULLSCREEN | SDL_WINDOW_SHOWN
     );
+
+    int screen_width = 0;
+    int screen_height = 0;
+    SDL_GetWindowSize(window, &screen_width, &screen_height);
+    DEBUG_PRINTF("SDL_GetWindowSize: %d %d\n", screen_width, screen_height);
+
+
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
     SDL_Surface* sdllogo = NULL;
@@ -126,8 +130,8 @@ int main(int argc, char* argv[]) {
     }
 #endif
 
-    pos.x = SCREEN_W / 2 - switchlogo->w / 2;
-    pos.y = SCREEN_H / 2 - switchlogo->h / 2;
+    pos.x = screen_width / 2 - switchlogo->w / 2;
+    pos.y = screen_height / 2 - switchlogo->h / 2;
     pos.w = switchlogo->w;
     pos.h = switchlogo->h;
 
@@ -153,7 +157,7 @@ int main(int argc, char* argv[]) {
     }
 #endif
 
-    SDL_Rect helloworld_rect = { 0, SCREEN_H - 36, 0, 0 };
+    SDL_Rect helloworld_rect = { 0, screen_height - 36, 0, 0 };
     if (font) {
         // render text as texture
 
@@ -231,8 +235,8 @@ int main(int argc, char* argv[]) {
         // set position and bounce on the walls
         pos.y += vel_y;
         pos.x += vel_x;
-        if (pos.x + pos.w > SCREEN_W) {
-            pos.x = SCREEN_W - pos.w;
+        if (pos.x + pos.w > screen_width) {
+            pos.x = screen_width - pos.w;
             vel_x = -rand_range(1, 5);
             col = rand_range(0, 4);
             snd = rand_range(0, 3);
@@ -249,8 +253,8 @@ int main(int argc, char* argv[]) {
                 Mix_PlayChannel(-1, sound[snd], 0);
             }
         }
-        if (pos.y + pos.h > SCREEN_H) {
-            pos.y = SCREEN_H - pos.h;
+        if (pos.y + pos.h > screen_height) {
+            pos.y = screen_height - pos.h;
             vel_y = -rand_range(1, 5);
             col = rand_range(0, 4);
             snd = rand_range(0, 3);
