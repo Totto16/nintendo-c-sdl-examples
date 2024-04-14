@@ -10,11 +10,9 @@ void debug_print(const char* text) {
 #elif defined(__WIIU__)
     OSReportWarn(text);
 #elif defined(__WII__)
-    //TODO
-    (void) text;
+    fprintf(stderr, text);
 #elif defined(__GAMECUBE__)
-    //TODO
-    (void) text;
+    fprintf(stderr, text);
 #else
 #error "not implemented"
 #endif
@@ -28,12 +26,11 @@ void platform_init() {
         exit(100);
     }
 #elif defined(__WIIU__)
-    WHBProcInit();
+//nothing to do
 #elif defined(__WII__)
-    WPAD_Init();
-    SDL_ShowCursor(SDL_DISABLE);
+//nothing to do
 #elif defined(__GAMECUBE__)
-    //TODO
+//nothing to do
 #else
 #error "not implemented"
 #endif
@@ -43,11 +40,11 @@ void platform_exit() {
 #if defined(__3DS__) || defined(__SWITCH__)
     romfsExit();
 #elif defined(__WIIU__)
-    WHBProcShutdown();
+//nothing to do
 #elif defined(__WII__)
 //nothing to do
 #elif defined(__GAMECUBE__)
-    //TODO
+//nothing to do
 #else
 #error "not implemented"
 #endif

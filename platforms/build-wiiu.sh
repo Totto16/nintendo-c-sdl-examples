@@ -106,6 +106,8 @@ APP_AUTHOR 	= 'Totto16'
 
 APP_ROMFS='$ROMFS'
 
+BUILD_WUHB    = false
+
 EOF
 
 meson setup "$BUILD_DIR" \

@@ -33,7 +33,7 @@ jobs:
                       container: devkitppc
 
                     - name: wiiu
-                      extension: wuhb
+                      extension: rpx
                       container: devkitppc
 
         steps:

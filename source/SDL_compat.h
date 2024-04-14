@@ -21,6 +21,7 @@
 #endif
 
 #if defined(__WII__)
+#include <debug.h>
 #include <gccore.h>
 #include <stdbool.h>
 #include <wiiuse/wpad.h>
@@ -28,6 +29,7 @@
 
 
 #if defined(__GAMECUBE__)
+#include <debug.h>
 #include <stdbool.h>
 #endif
 
@@ -39,21 +41,21 @@ void platform_exit();
 
 #define DEBUG_TAG "<CUSTOM_DEBUG>: "
 
-#define DEBUG_PRINTF(...)                                             \
-    do {                                                              \
-        char* internalBuffer = NULL;                                  \
+#define DEBUG_PRINTF(...)                                                       \
+    do {                                                                        \
+        char* internalBuffer = NULL;                                            \
         int toWrite = snprintf(NULL, 0, DEBUG_TAG __VA_ARGS__) + 1;             \
-        internalBuffer = (char*) malloc(toWrite * sizeof(char));      \
-        if (internalBuffer == NULL) {                                 \
-            exit(200);                                                \
-        }                                                             \
+        internalBuffer = (char*) malloc(toWrite * sizeof(char));                \
+        if (internalBuffer == NULL) {                                           \
+            exit(200);                                                          \
+        }                                                                       \
         int written = snprintf(internalBuffer, toWrite, DEBUG_TAG __VA_ARGS__); \
-        if (written >= toWrite) {                                     \
-            free(internalBuffer);                                     \
-            exit(201);                                                \
-        }                                                             \
-        debug_print(internalBuffer);                                  \
-        free(internalBuffer);                                         \
+        if (written >= toWrite) {                                               \
+            free(internalBuffer);                                               \
+            exit(201);                                                          \
+        }                                                                       \
+        debug_print(internalBuffer);                                            \
+        free(internalBuffer);                                                   \
     } while (false)
 
 
@@ -75,7 +77,8 @@ void platform_exit();
 #define ROMFS_DIR "romfs:/data/"
 #elif defined(__WIIU__)
 //TODO: test
-#define ROMFS_DIR "/content/data/"
+//#define ROMFS_DIR "/content/data/"
+#define NO_ROMFS_SUPPORT
 #elif defined(__WII__)
 #define NO_ROMFS_SUPPORT
 #elif defined(__GAMECUBE__)

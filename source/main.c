@@ -318,6 +318,10 @@ int main(int argc, char* argv[]) {
         { }
     }
 
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+
+
     IMG_Quit();
     Mix_CloseAudio();
     TTF_Quit();

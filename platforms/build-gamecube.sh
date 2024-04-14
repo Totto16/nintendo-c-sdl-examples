@@ -53,9 +53,9 @@ export ENDIANESS="big"
 
 export COMMON_FLAGS="'-m${OGC_MACHINE}','-mcpu=750','-meabi','-mhard-float','-ffunction-sections','-fdata-sections'"
 
-export COMPILE_FLAGS="'-D__GAMECUBE__','-isystem', '$LIBOGC/include', '-I$PORTLIBS_PATH_PPC/include', '-I$PORTLIBS_PATH_OGC/include'"
+export COMPILE_FLAGS="'-D__GAMECUBE__','-D_OGC_','-isystem', '$LIBOGC/include', '-I$PORTLIBS_PATH_PPC/include', '-I$PORTLIBS_PATH_OGC/include'"
 
-export LINK_FLAGS="'-L$PORTLIBS_LIB', '-L$PORTLIBS_LIB_PPC','-L$PORTLIBS_LIB_OGC'"
+export LINK_FLAGS="'-L$LIBOGC/lib','-L$PORTLIBS_LIB_PPC','-L$PORTLIBS_LIB_OGC'"
 
 export CROSS_FILE="./platforms/crossbuild-gamecube.ini"
 
