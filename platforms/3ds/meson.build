@@ -107,18 +107,18 @@ if use_smdh
 
     default_icon = LIBCTRU / 'default_icon.png'
 
-    app_icon = meson.get_external_property('APP_ICON', default_icon)
+    APP_ICON = meson.get_external_property('APP_ICON', default_icon)
 
-    if not fs.is_absolute(app_icon)
-        app_icon = meson.project_source_root() / app_icon
+    if not fs.is_absolute(APP_ICON)
+        APP_ICON = meson.project_source_root() / APP_ICON
     endif
 
 
-    if not fs.exists(app_icon)
-        error('APP_ICON should exist, but doesn\'t: \'' + app_icon + '\'')
+    if not fs.exists(APP_ICON)
+        error('APP_ICON should exist, but doesn\'t: \'' + APP_ICON + '\'')
     endif
 
-    SMDH_FLAGS += app_icon
+    SMDH_FLAGS += APP_ICON
 
 
     SMDH_FLAGS += (
@@ -127,22 +127,22 @@ if use_smdh
 
 
 
-    small_app_icon = meson.get_external_property('APP_SMALL_ICON', '')
+    APP_SMALL_ICON = meson.get_external_property('APP_SMALL_ICON', '')
 
-    if small_app_icon != ''
-        if not fs.is_absolute(small_app_icon)
-            small_app_icon = meson.project_source_root() / small_app_icon
+    if APP_SMALL_ICON != ''
+        if not fs.is_absolute(APP_SMALL_ICON)
+            APP_SMALL_ICON = meson.project_source_root() / APP_SMALL_ICON
         endif
 
 
-        if not fs.exists(small_app_icon)
+        if not fs.exists(APP_SMALL_ICON)
             error(
-                'APP_SMALL_ICON should exist, but doesn\'t: \'' + small_app_icon +
+                'APP_SMALL_ICON should exist, but doesn\'t: \'' + APP_SMALL_ICON +
                 '\'',
             )
         endif
 
-        SMDH_FLAGS += small_app_icon
+        SMDH_FLAGS += APP_SMALL_ICON
     endif
 
 
