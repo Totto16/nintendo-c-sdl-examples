@@ -49,6 +49,7 @@ endforeach
 elf_file = build_target(
     exe_name + '.elf',
     src_files,
+    include_directories: inc_dirs,
     dependencies: deps,
     override_options: {
         'warning_level': '3',

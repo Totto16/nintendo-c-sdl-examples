@@ -16,8 +16,6 @@ app_author = 'Totto16'
 app_name = 'sdl_example'
 app_desc = 'SDL Example'
 
-compile_args = []
-
 deps = []
 inc_dirs = []
 

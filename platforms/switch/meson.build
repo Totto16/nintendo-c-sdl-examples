@@ -1,7 +1,6 @@
-
 # libraries
 
-switch_dependencies = [
+dependencies = [
     'harfbuzz',
     'egl',
     'flac',
@@ -16,7 +15,7 @@ switch_dependencies = [
     'zlib',
 ]
 
-switch_dependencies_native = [
+dependencies_native = [
     'bz2',
     'drm_nouveau',
     'modplug',
@@ -25,8 +24,7 @@ switch_dependencies_native = [
     'SDL2main',
 ]
 
-
-foreach dep : switch_dependencies
+foreach dep : dependencies
     deps += dependency(
         dep,
         required: true,
@@ -41,15 +39,13 @@ if library_dirs.length() == 0
 endif
 
 c = meson.get_compiler('c')
-foreach dep : switch_dependencies_native
+foreach dep : dependencies_native
     deps += c.find_library(
         dep,
         required: true,
         dirs: library_dirs,
     )
 endforeach
-
-
 
 ## compilation
 
@@ -58,12 +54,10 @@ elf_file = build_target(
     src_files,
     include_directories: inc_dirs,
     dependencies: deps,
-    c_args: compile_args,
-    cpp_args: compile_args,
-    override_options: [
-        'warning_level=3',
-        'werror=true',
-    ],
+    override_options: {
+        'warning_level': '3',
+        'werror': true,
+    },
     native: false,
     target_type: 'executable',
 )
@@ -71,7 +65,6 @@ elf_file = build_target(
 use_nacp = ['true', 'True', '1', true].contains(
     meson.get_external_property('USE_NACP', ''),
 )
-
 
 elf2nro = find_program('elf2nro')
 # executable input elf file, output nro file
@@ -83,28 +76,13 @@ fs = import('fs')
 
 if use_nacp
     nacptool = find_program('nacptool')
-    NACP_FLAGS = [nacptool, '--create']
-
-    APP_NAME = meson.get_external_property('APP_NAME', exe_name)
-    NACP_FLAGS += APP_NAME
-
-
-    APP_AUTHOR = meson.get_external_property('APP_AUTHOR', '')
-    if APP_AUTHOR == ''
-        error('If USE_NACP is set, you have to provide an APP_AUTHOR')
-    endif
-    NACP_FLAGS += APP_AUTHOR
-
-    APP_VERSION = meson.get_external_property('APP_VERSION', '')
-    if APP_VERSION == ''
-        error('If USE_NACP is set, you have to provide an APP_VERSION')
-    endif
-    NACP_FLAGS += APP_VERSION
-
-    NACP_FLAGS += (
-        exe_name + '.nacp' # outfile
-    )
-
+    NACP_FLAGS = [
+        nacptool,
+        '--create', app_name,
+        app_author,
+        meson.project_version(),
+        exe_name + '.nacp',
+    ]
 
     APP_TITLEID = meson.get_external_property('APP_TITLEID', '')
 
@@ -113,8 +91,7 @@ if use_nacp
         NACP_FLAGS += '--titleid=' + APP_TITLEID
     endif
 
-
-    # nacptool --create <name> <author> <version> <exe_name>.nacp 
+    # nacptool --create <name> <author> <version> <exe_name>.nacp
     # optional: --titleid=<titleID>
     nacp_file = custom_target(
         exe_name + '.nacp',
@@ -122,9 +99,9 @@ if use_nacp
         output: [exe_name + '.nacp'],
         depends: NACP_DEPS,
     )
+
     NRO_FLAGS += '--nacp=' + exe_name + '.nacp'
     NRO_DEPS += nacp_file
-
 
 endif
 
@@ -141,15 +118,11 @@ if not fs.is_absolute(APP_ICON)
     APP_ICON = meson.project_source_root() / APP_ICON
 endif
 
-
 if not fs.exists(APP_ICON)
     error('APP_ICON should exist, but doesn\'t: \'' + APP_ICON + '\'')
 endif
 
-
-
 NRO_FLAGS += '--icon=' + APP_ICON
-
 
 APP_ROMFS = meson.get_external_property('APP_ROMFS', '')
 
