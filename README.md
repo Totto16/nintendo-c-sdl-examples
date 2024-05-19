@@ -28,4 +28,4 @@ You need sdl portlibs for the platform and some other portlibs, than you can bui
 | gamecube | ✅        | ❌         | ❓                |
 | wii      | ✅        | ❌         | ❓                |
 | wiiu     | ✅        | ❌         | ❓                |
-| switch   | ✅        | ✅         | ❓                |
+| switch   | ✅        | ✅         | ✅                |

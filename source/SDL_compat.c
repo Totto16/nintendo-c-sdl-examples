@@ -8,7 +8,7 @@ void debug_print(const char* text) {
 #elif defined(__SWITCH__)
     svcOutputDebugString(text, strlen(text));
 #elif defined(__WIIU__)
-    OSReportWarn(text);
+    OSReportVerbose(text);
 #elif defined(__WII__)
     fprintf(stderr, text);
 #elif defined(__GAMECUBE__)
