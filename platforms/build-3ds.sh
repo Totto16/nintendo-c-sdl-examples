@@ -31,7 +31,7 @@ export CMAKE="$BIN_DIR/$TOOL_PREFIX-cmake"
 export PATH="$BIN_DIR:$PATH"
 
 export CC="$COMPILER_BIN/$TOOL_PREFIX-gcc"
-export CXX="$COMPILER_BIN/$TOOL_PREFIX-g"++
+export CXX="$COMPILER_BIN/$TOOL_PREFIX-g++"
 export AS="$COMPILER_BIN/$TOOL_PREFIX-as"
 export AR="$COMPILER_BIN/$TOOL_PREFIX-gcc-ar"
 export RANLIB="$COMPILER_BIN/$TOOL_PREFIX-gcc-ranlib"
@@ -43,9 +43,9 @@ export ARCH="arm"
 export ARM_VERSION="arm11mpcore"
 export ENDIANESS="little"
 
-export COMMON_FLAGS="'-march=armv6k','-mtune=mpcore','-mfloat-abi=hard', '-mtp=soft','-mword-relocations', '-ffunction-sections', '-fdata-sections'"
+export COMMON_FLAGS="'-march=armv6k','-mtune=mpcore','-mfloat-abi=hard','-mtp=soft','-mword-relocations','-ffunction-sections','-fdata-sections'"
 
-export COMPILE_FLAGS="'-D_3DS','-D__3DS__', '-isystem', '$LIBCTRU/include', '-I$PORTLIBS_PATH_3DS/include'"
+export COMPILE_FLAGS="'-D_3DS','-D__3DS__','-isystem','$LIBCTRU/include','-I$PORTLIBS_PATH_3DS/include'"
 
 export LINK_FLAGS="'-L$PORTLIBS_LIB','-L$LIBCTRU_LIB','-fPIE','-specs=$ARCH_DEVKIT_FOLDER/$TOOL_PREFIX/lib/3dsx.specs'"
 
@@ -70,6 +70,8 @@ devkitpro = '$DEVKITPRO'
 [binaries]
 c = '$CC'
 cpp = '$CXX'
+c_ld = 'bfd'
+cpp_ld = 'bfd'
 ar      = '$AR'
 as      = '$AS'
 ranlib  = '$RANLIB'
@@ -95,12 +97,8 @@ cpp_link_args = [$COMMON_FLAGS, $LINK_FLAGS]
 [properties]
 pkg_config_libdir = '$PKG_CONFIG_PATH'
 needs_exe_wrapper = true
-library_dirs= ['$LIBCTRU_LIB', '$PORTLIBS_LIB']
+library_dirs= ['$LIBCTRU_LIB','$PORTLIBS_LIB']
 libctru='$LIBCTRU'
-
-APP_NAME	= 'sdl_example'
-APP_AUTHOR 	= 'Totto16'
-APP_DESC = 'SDL Example'
 
 USE_SMDH    = true
 
@@ -125,13 +123,13 @@ mkdir -p "$SDL_ROOT_DIR"
 
 # build sdl2
 
-export SDL2_SRC_DIR="SDL2-2.28.5"
+export SDL2_SRC_DIR="SDL2-2.30.3"
 
 if [ ! -d "$SDL2_SRC_DIR" ]; then
 
-    wget "https://github.com/libsdl-org/SDL/releases/download/release-2.28.5/SDL2-2.28.5.tar.gz"
-    tar xzf SDL2-2.28.5.tar.gz
-    rm -rf SDL2-2.28.5.tar.gz
+    wget "https://github.com/libsdl-org/SDL/releases/download/release-2.30.3/SDL2-2.30.3.tar.gz"
+    tar xzf SDL2-2.30.3.tar.gz
+    rm -rf SDL2-2.30.3.tar.gz
 
     cd $SDL2_SRC_DIR
 
@@ -209,8 +207,49 @@ fi
 
 cd ..
 
-meson setup "$BUILD_DIR" \
-    --cross-file "$CROSS_FILE" \
-    -Ddefault_library=static
+## options: "smart, complete_rebuild"
+export COMPILE_TYPE="smart"
+
+export BUILDTYPE="debug"
+
+if [ "$#" -eq 0 ]; then
+    # nothing
+    echo "Using compile type '$COMPILE_TYPE'"
+elif [ "$#" -eq 1 ]; then
+    COMPILE_TYPE="$1"
+elif [ "$#" -eq 2 ]; then
+    COMPILE_TYPE="$1"
+    BUILDTYPE="$2"
+else
+    echo "Too many arguments given, expected 1 or 2"
+    exit 1
+fi
+
+if [ "$COMPILE_TYPE" == "smart" ]; then
+    : # noop
+elif [ "$COMPILE_TYPE" == "complete_rebuild" ]; then
+    : # noop
+else
+    echo "Invalid COMPILE_TYPE, expected: 'smart' or 'complete_rebuild'"
+    exit 1
+fi
+
+if [ ! -d "$ROMFS" ]; then
+
+    mkdir -p "$ROMFS"
+
+    cp -r assets "$ROMFS/"
+
+fi
+
+if [ "$COMPILE_TYPE" == "complete_rebuild" ] || [ ! -e "$BUILD_DIR" ]; then
+
+    meson setup "$BUILD_DIR" \
+        "--wipe" \
+        --cross-file "$CROSS_FILE" \
+        "-Dbuildtype=$BUILDTYPE" \
+        -Ddefault_library=static
+
+fi
 
 meson compile -C "$BUILD_DIR"

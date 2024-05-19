@@ -1,7 +1,6 @@
-
 # libraries
 
-_3ds_dependencies = [
+dependencies = [
     'flac',
     'freetype2',
     'ogg',
@@ -12,23 +11,22 @@ _3ds_dependencies = [
     'zlib',
 ]
 
-_3ds_dependencies_native = [
+dependencies_native = [
     'bz2',
     'ctru',
     'mad',
     'mikmod',
     'modplug',
     'png16',
-    'SDL2main'
+    'SDL2main',
 ]
-
 
 library_dirs = meson.get_external_property('library_dirs', [''])
 if library_dirs.length() == 0
     error('property \'library_dirs\' has to be set!')
 endif
 
-foreach dep : _3ds_dependencies
+foreach dep : dependencies
     deps += dependency(
         dep,
         required: true,
@@ -38,7 +36,7 @@ foreach dep : _3ds_dependencies
 endforeach
 
 c = meson.get_compiler('c')
-foreach dep : _3ds_dependencies_native
+foreach dep : dependencies_native
     deps += c.find_library(
         dep,
         required: true,
@@ -46,22 +44,16 @@ foreach dep : _3ds_dependencies_native
     )
 endforeach
 
-
-
-
 ## compilation
 
 elf_file = build_target(
     exe_name + '.elf',
     src_files,
-    include_directories: inc_dirs,
     dependencies: deps,
-    c_args: compile_args,
-    cpp_args: compile_args,
-    override_options: [
-        'warning_level=3',
-        'werror=true',
-    ],
+    override_options: {
+        'warning_level': '3',
+        'werror': true,
+    },
     native: false,
     target_type: 'executable',
 )
@@ -69,7 +61,6 @@ elf_file = build_target(
 use_smdh = ['true', 'True', '1', true].contains(
     meson.get_external_property('USE_SMDH', ''),
 )
-
 
 _3dsxtool = find_program('3dsxtool')
 
@@ -82,23 +73,12 @@ fs = import('fs')
 if use_smdh
 
     smdhtool = find_program('smdhtool')
-    SMDH_FLAGS = [smdhtool, '--create']
-
-    APP_NAME = meson.get_external_property('APP_NAME', exe_name)
-    SMDH_FLAGS += APP_NAME
-
-    APP_DESC = meson.get_external_property('APP_DESC', '')
-    if APP_DESC == ''
-        error('If USE_SMDH is set, you have to provide an APP_DESC')
-    endif
-    SMDH_FLAGS += APP_DESC
-
-
-    APP_AUTHOR = meson.get_external_property('APP_AUTHOR', '')
-    if APP_AUTHOR == ''
-        error('If USE_SMDH is set, you have to provide an APP_AUTHOR')
-    endif
-    SMDH_FLAGS += APP_AUTHOR
+    SMDH_FLAGS = [
+        smdhtool,
+        '--create', app_name,
+        app_desc,
+        app_author,
+    ]
 
     LIBCTRU = meson.get_external_property('libctru', '')
     if LIBCTRU == ''
@@ -113,19 +93,13 @@ if use_smdh
         APP_ICON = meson.project_source_root() / APP_ICON
     endif
 
-
     if not fs.exists(APP_ICON)
         error('APP_ICON should exist, but doesn\'t: \'' + APP_ICON + '\'')
     endif
 
     SMDH_FLAGS += APP_ICON
 
-
-    SMDH_FLAGS += (
-        exe_name + '.smdh' # outfile
-    )
-
-
+    SMDH_FLAGS += (exe_name + '.smdh')
 
     APP_SMALL_ICON = meson.get_external_property('APP_SMALL_ICON', '')
 
@@ -134,18 +108,16 @@ if use_smdh
             APP_SMALL_ICON = meson.project_source_root() / APP_SMALL_ICON
         endif
 
-
         if not fs.exists(APP_SMALL_ICON)
             error(
-                'APP_SMALL_ICON should exist, but doesn\'t: \'' + APP_SMALL_ICON +
-                '\'',
+                'APP_SMALL_ICON should exist, but doesn\'t: \''
+                + APP_SMALL_ICON
+                + '\'',
             )
         endif
 
         SMDH_FLAGS += APP_SMALL_ICON
     endif
-
-
 
     # smdhtool --create <name> <long description> <author> <icon.png> <exe_name>.smdh [<smallicon.png>]
     smdh_file = custom_target(
@@ -158,8 +130,6 @@ if use_smdh
     _3DSX_DEPS += smdh_file
 
 endif
-
-
 
 APP_ROMFS = meson.get_external_property('APP_ROMFS', '')
 
