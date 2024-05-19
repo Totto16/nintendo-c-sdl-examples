@@ -1,22 +1,22 @@
 project(
-    'nintendo-c++-sdl-examples',
+    'nintendo-c-sdl-examples',
     'c',
-    'cpp',
-    meson_version: '>=0.60.0',
-    default_options: [
-        'buildtype=release',
-        'optimization=3',
-        'strip=true',
-        'cpp_std=c++20',
-        'c_std=c11',
-        'b_ndebug=if-release',
-    ],
-    version: '1.0.0',
+    meson_version: '>=1.3.0',
+    default_options: {
+        'buildtype': 'release',
+        'optimization': '3',
+        'strip': true,
+        'c_std': 'c11',
+        'b_ndebug': 'if-release',
+    },
+    version: '1.1.0',
 )
 
+app_author = 'Totto16'
+app_name = 'sdl_example'
+app_desc = 'SDL Example'
 
 compile_args = []
-
 
 deps = []
 inc_dirs = []
@@ -24,7 +24,6 @@ inc_dirs = []
 if not meson.is_cross_build()
     error('This is only designed, to be a cross-build')
 endif
-
 
 if (
     not (
@@ -37,7 +36,6 @@ if (
 )
     error('Not supported host system: \'' + host_machine.system() + '\'')
 endif
-
 
 deps += dependency(
     'sdl2',
@@ -70,9 +68,6 @@ deps += dependency(
     required: true,
     native: false,
 )
-
-
-add_project_arguments('-fno-rtti', '-fno-exceptions', language: 'cpp')
 
 src_files = []
 
