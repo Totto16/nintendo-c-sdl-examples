@@ -1,7 +1,7 @@
 
 # libraries
 
-wii_dependencies = [
+dependencies = [
     'freetype2',
     'harfbuzz',
     'ogg',
@@ -11,7 +11,7 @@ wii_dependencies = [
     'zlib',
 ]
 
-wii_dependencies_native = [
+dependencies_native = [
     'bte',
     'bz2',
     'fat',
@@ -25,9 +25,7 @@ wii_dependencies_native = [
     'wiiuse',
 ]
 
-
-
-foreach dep : wii_dependencies
+foreach dep : dependencies
     deps += dependency(
         dep,
         required: true,
@@ -42,15 +40,13 @@ if library_dirs.length() == 0
 endif
 
 c = meson.get_compiler('c')
-foreach dep : wii_dependencies_native
+foreach dep : dependencies_native
     deps += c.find_library(
         dep,
         required: true,
         dirs: library_dirs,
     )
 endforeach
-
-
 
 ## compilation
 
@@ -59,12 +55,10 @@ elf_file = build_target(
     src_files,
     include_directories: inc_dirs,
     dependencies: deps,
-    c_args: compile_args,
-    cpp_args: compile_args,
-    override_options: [
-        'warning_level=3',
-        'werror=true',
-    ],
+    override_options: {
+        'warning_level': '3',
+        'werror': true,
+    },
     native: false,
     target_type: 'executable',
 )
@@ -82,3 +76,27 @@ custom_target(
     output: [exe_name + '.dol'],
     build_by_default: true,
 )
+
+use_meta_xml = ['true', 'True', '1', true].contains(
+    meson.get_external_property('USE_META_XML', ''),
+)
+
+if use_meta_xml
+
+    meta_xml_conf = configuration_data(
+        {
+            'APP_VERSION': meson.project_version(),
+            'APP_NAME': app_name,
+            'APP_AUTHOR': app_author,
+            'APP_SHORT_DESCRIPTION': app_desc,
+            'APP_LONG_DESCRIPTION': app_desc,
+        },
+    )
+
+    meta_xml = configure_file(
+        input: 'meta.xml.in',
+        output: 'meta.xml',
+        configuration: meta_xml_conf,
+    )
+
+endif

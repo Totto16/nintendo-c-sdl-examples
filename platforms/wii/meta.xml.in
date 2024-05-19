@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1.0">
+  <name>@APP_NAME@</name>
+  <coder>@APP_AUTHOR@</coder>
+  <version>@APP_VERSION@</version>
+  <short_description>@APP_SHORT_DESCRIPTION@</short_description>
+  <long_description>@APP_LONG_DESCRIPTION@</long_description>
+  <no_ios_reload/>
+  <ahb_access/>
+</app>

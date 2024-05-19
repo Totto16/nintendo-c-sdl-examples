@@ -29,6 +29,8 @@ export ROMFS="romfs"
 
 export BUILD_DIR="build-wii"
 
+export ROMFS="romfs"
+
 export TOOL_PREFIX="powerpc-eabi"
 
 export BIN_DIR_OGC="$PORTLIBS_PATH_OGC/bin"
@@ -39,7 +41,7 @@ export CMAKE="$BIN_DIR_OGC/$TOOL_PREFIX-cmake"
 export PATH="$BIN_DIR_PPC:$BIN_DIR_OGC:$PATH"
 
 export CC="$COMPILER_BIN/$TOOL_PREFIX-gcc"
-export CXX="$COMPILER_BIN/$TOOL_PREFIX-g"++
+export CXX="$COMPILER_BIN/$TOOL_PREFIX-g++"
 export AS="$COMPILER_BIN/$TOOL_PREFIX-as"
 export AR="$COMPILER_BIN/$TOOL_PREFIX-gcc-ar"
 export RANLIB="$COMPILER_BIN/$TOOL_PREFIX-gcc-ranlib"
@@ -55,7 +57,7 @@ export COMMON_FLAGS="'-m${OGC_MACHINE}','-mcpu=750','-meabi','-mhard-float','-ff
 
 export COMPILE_FLAGS="'-D__WII__','-D_OGC_','-DGEKKO','-isystem', '$LIBOGC/include', '-I$PORTLIBS_PATH_PPC/include', '-I$PORTLIBS_PATH_OGC/include'"
 
-export LINK_FLAGS="'-L$LIBOGC/lib','-L$PORTLIBS_LIB_PPC','-L$PORTLIBS_LIB_OGC'"
+export LINK_FLAGS="'-L$LIBOGC_LIB','-L$PORTLIBS_LIB_PPC','-L$PORTLIBS_LIB_OGC'"
 
 export CROSS_FILE="./platforms/crossbuild-wii.ini"
 
@@ -78,6 +80,8 @@ devkitpro = '$DEVKITPRO'
 [binaries]
 c = '$CC'
 cpp = '$CXX'
+c_ld = 'bfd'
+cpp_ld = 'bfd'
 ar      = '$AR'
 as      = '$AS'
 ranlib  = '$RANLIB'
@@ -105,10 +109,56 @@ pkg_config_libdir = '$PKG_CONFIG_PATH'
 needs_exe_wrapper = true
 library_dirs= ['$LIBOGC_LIB', '$PORTLIBS_LIB_OGC','$PORTLIBS_LIB_PPC']
 
+USE_META_XML    = true
+
+
+APP_ROMFS='$ROMFS'
+
 EOF
 
-meson setup "$BUILD_DIR" \
-    --cross-file "$CROSS_FILE" \
-    -Ddefault_library=static
+## options: "smart, complete_rebuild"
+export COMPILE_TYPE="smart"
+
+export BUILDTYPE="debug"
+
+if [ "$#" -eq 0 ]; then
+    # nothing
+    echo "Using compile type '$COMPILE_TYPE'"
+elif [ "$#" -eq 1 ]; then
+    COMPILE_TYPE="$1"
+elif [ "$#" -eq 2 ]; then
+    COMPILE_TYPE="$1"
+    BUILDTYPE="$2"
+else
+    echo "Too many arguments given, expected 1 or 2"
+    exit 1
+fi
+
+if [ "$COMPILE_TYPE" == "smart" ]; then
+    : # noop
+elif [ "$COMPILE_TYPE" == "complete_rebuild" ]; then
+    : # noop
+else
+    echo "Invalid COMPILE_TYPE, expected: 'smart' or 'complete_rebuild'"
+    exit 1
+fi
+
+if [ ! -d "$ROMFS" ]; then
+
+    mkdir -p "$ROMFS"
+
+    cp -r assets "$ROMFS/"
+
+fi
+
+if [ "$COMPILE_TYPE" == "complete_rebuild" ] || [ ! -e "$BUILD_DIR" ]; then
+
+    meson setup "$BUILD_DIR" \
+        "--wipe" \
+        --cross-file "$CROSS_FILE" \
+        "-Dbuildtype=$BUILDTYPE" \
+        -Ddefault_library=static
+
+fi
 
 meson compile -C "$BUILD_DIR"
