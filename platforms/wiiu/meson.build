@@ -1,7 +1,7 @@
 
 # libraries
 
-wiiu_dependencies = [
+dependencies = [
     'freetype2',
     'harfbuzz',
     'ogg',
@@ -10,7 +10,7 @@ wiiu_dependencies = [
     'zlib',
 ]
 
-wiiu_dependencies_native = [
+dependencies_native = [
     'bz2',
     'modplug',
     'png16',
@@ -19,7 +19,7 @@ wiiu_dependencies_native = [
 ]
 
 
-foreach dep : wiiu_dependencies
+foreach dep : dependencies
     deps += dependency(
         dep,
         required: true,
@@ -34,7 +34,7 @@ if library_dirs.length() == 0
 endif
 
 c = meson.get_compiler('c')
-foreach dep : wiiu_dependencies_native
+foreach dep : dependencies_native
     deps += c.find_library(
         dep,
         required: true,
@@ -51,12 +51,10 @@ elf_file = build_target(
     src_files,
     include_directories: inc_dirs,
     dependencies: deps,
-    c_args: compile_args,
-    cpp_args: compile_args,
-    override_options: [
-        'warning_level=3',
-        'werror=true',
-    ],
+    override_options: {
+        'warning_level': '3',
+        'werror': true,
+    },
     native: false,
     target_type: 'executable',
 )
@@ -83,23 +81,7 @@ if build_wuhb
     wuhbtool = find_program('wuhbtool')
 
 
-    WUHB_FLAGS = [wuhbtool, exe_name + '.rpx', exe_name + '.wuhb']
-
-    APP_NAME = meson.get_external_property('APP_NAME', '')
-    if APP_NAME != ''
-        WUHB_FLAGS += ['--name=' + APP_NAME]
-    endif
-
-    APP_SHORT_NAME = meson.get_external_property('APP_SHORT_NAME', '')
-    if APP_SHORT_NAME != ''
-        WUHB_FLAGS += ['--short-name=' + APP_SHORT_NAME]
-    endif
-
-    APP_AUTHOR = meson.get_external_property('APP_AUTHOR', '')
-    if APP_AUTHOR != ''
-        WUHB_FLAGS += ['--author=' + APP_AUTHOR]
-    endif
-
+    WUHB_FLAGS = [wuhbtool, exe_name + '.rpx', exe_name + '.wuhb','--name=' + app_name,'--short-name=' + APP_SHORT_NAME,'--author=' + APP_AUTHOR]
 
     fs = import('fs')
 
@@ -118,17 +100,18 @@ if build_wuhb
         WUHB_FLAGS += ['--icon=' + APP_ICON]
     endif
 
-    APP_ROMFS = meson.get_external_property('APP_ROMFS', '')
-    if APP_ROMFS != ''
-        if not fs.is_absolute(APP_ROMFS)
-            APP_ROMFS = meson.project_source_root() / APP_ROMFS
+    # TODO: figure out, if this is equal to ROMFS or not
+    APP_CONTENT = meson.get_external_property('APP_CONTENT', '')
+    if APP_CONTENT != ''
+        if not fs.is_absolute(APP_CONTENT)
+            APP_CONTENT = meson.project_source_root() / APP_CONTENT
         endif
 
-        if not fs.exists(APP_ROMFS)
-            error('APP_ROMFS should exist, but doesn\'t: \'' + APP_ROMFS + '\'')
+        if not fs.exists(APP_CONTENT)
+            error('APP_CONTENT should exist, but doesn\'t: \'' + APP_CONTENT + '\'')
         endif
 
-        WUHB_FLAGS += '--content=' + APP_ROMFS
+        WUHB_FLAGS += '--content=' + APP_CONTENT
 
     endif
 
