@@ -51,14 +51,14 @@ int main(int argc, char* argv[]) {
     SDL_Event event;
 
     SDL_Color colors[] = {
-        {128, 128, 128, 0}, // gray
-        {255, 255, 255, 0}, // white
-        {255,   0,   0, 0}, // red
-        {  0, 255,   0, 0}, // green
-        {  0,   0, 255, 0}, // blue
-        {255, 255,   0, 0}, // brown
-        {  0, 255, 255, 0}, // cyan
-        {255,   0, 255, 0}, // purple
+        { 128, 128, 128, 0 }, // gray
+        { 255, 255, 255, 0 }, // white
+        { 255,   0,   0, 0 }, // red
+        {   0, 255,   0, 0 }, // green
+        {   0,   0, 255, 0 }, // blue
+        { 255, 255,   0, 0 }, // brown
+        {   0, 255, 255, 0 }, // cyan
+        { 255,   0, 255, 0 }, // purple
     };
     int col = 0;
     int snd = 0;
@@ -102,14 +102,12 @@ int main(int argc, char* argv[]) {
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
-    SDL_Surface* sdllogo = NULL;
-#ifndef NO_ROMFS_SUPPORT
     // load logos from file
-    sdllogo = IMG_Load(ROMFS_DIR "sdl.png");
+    SDL_Surface* sdllogo = IMG_Load(ROMFS_DIR "sdl.png");
     if (!sdllogo) {
         DEBUG_PRINTF("Couldn't load sdllogo: %s\n", SDL_GetError());
     }
-#endif
+
 
     sdl_pos.w = sdllogo->w;
     sdl_pos.h = sdllogo->h;
@@ -122,13 +120,11 @@ int main(int argc, char* argv[]) {
     SDL_FreeSurface(sdllogo);
 
 
-    SDL_Surface* switchlogo = NULL;
-#ifndef NO_ROMFS_SUPPORT
-    switchlogo = IMG_Load(ROMFS_DIR "switch.png");
+    SDL_Surface* switchlogo = IMG_Load(ROMFS_DIR "switch.png");
     if (!switchlogo) {
         DEBUG_PRINTF("Couldn't load switchlogo: %s\n", SDL_GetError());
     }
-#endif
+
 
     pos.x = screen_width / 2 - switchlogo->w / 2;
     pos.y = screen_height / 2 - switchlogo->h / 2;
@@ -149,13 +145,10 @@ int main(int argc, char* argv[]) {
     SDL_JoystickOpen(0);
 
     // load font from romfs
-    TTF_Font* font = NULL;
-#ifndef NO_ROMFS_SUPPORT
-    font = TTF_OpenFont(ROMFS_DIR "LeroyLetteringLightBeta01.ttf", 36);
+    TTF_Font* font = TTF_OpenFont(ROMFS_DIR "LeroyLetteringLightBeta01.ttf", 36);
     if (!font) {
         DEBUG_PRINTF("Couldn't load font: %s\n", SDL_GetError());
     }
-#endif
 
     SDL_Rect helloworld_rect = { 0, screen_height - 36, 0, 0 };
     if (font) {
@@ -182,23 +175,17 @@ int main(int argc, char* argv[]) {
     Mix_AllocateChannels(2);
     Mix_OpenAudio(48000, MIX_DEFAULT_FORMAT, 2, 4096);
 
-#ifndef NO_ROMFS_SUPPORT
     // load music and sounds from files
     music = Mix_LoadMUS(ROMFS_DIR "background.ogg");
     sound[0] = Mix_LoadWAV(ROMFS_DIR "pop1.wav");
     sound[1] = Mix_LoadWAV(ROMFS_DIR "pop2.wav");
     sound[2] = Mix_LoadWAV(ROMFS_DIR "pop3.wav");
     sound[3] = Mix_LoadWAV(ROMFS_DIR "pop4.wav");
-#endif
 
     if (music) {
         Mix_PlayMusic(music, -1);
     } else {
-#ifndef NO_ROMFS_SUPPORT
         DEBUG_PRINTF("Couldn't load music: %s\n", SDL_GetError());
-#else
-        DEBUG_PRINTF("Couldn't load music: have no ROMFS support\n");
-#endif
     }
 
     while (!exit_requested && GENERAL_MAIN_LOOP()) {

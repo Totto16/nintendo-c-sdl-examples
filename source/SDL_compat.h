@@ -17,20 +17,31 @@
 
 #if defined(__WIIU__)
 #include <coreinit/debug.h>
+
 #include <whb/proc.h>
 #endif
 
 #if defined(__WII__)
-#include <debug.h>
-#include <gccore.h>
-#include <stdbool.h>
+
 #include <wiiuse/wpad.h>
 #endif
 
 
-#if defined(__GAMECUBE__)
+#if defined(_OGC_)
 #include <debug.h>
+#include <gccore.h>
+#include <ogc/system.h>
 #include <stdbool.h>
+#endif
+
+#if defined(__WUT__) || defined(_OGC_)
+#include <romfs-wiiu.h>
+
+
+#define R_FAILED(x) ((x) != 0)
+#define Result int
+
+
 #endif
 
 void debug_print(const char* text);
@@ -65,24 +76,17 @@ void platform_exit();
 #define GENERAL_MAIN_LOOP() appletMainLoop()
 #elif defined(__WIIU__)
 #define GENERAL_MAIN_LOOP() WHBProcIsRunning()
-#elif defined(__WII__)
-#define GENERAL_MAIN_LOOP() true
-#elif defined(__GAMECUBE__)
+#elif defined(_OGC_)
 #define GENERAL_MAIN_LOOP() true
 #else
 #error "not implemented"
 #endif
 
-#if defined(__3DS__) || defined(__SWITCH__)
-#define ROMFS_DIR "romfs:/data/"
-#elif defined(__WIIU__)
-//TODO: test
-//#define ROMFS_DIR "/content/data/"
-#define NO_ROMFS_SUPPORT
-#elif defined(__WII__)
-#define NO_ROMFS_SUPPORT
-#elif defined(__GAMECUBE__)
-#define NO_ROMFS_SUPPORT
+
+#if defined(__3DS__) || defined(__SWITCH__) || defined(__WIIU__) || defined(__WII__) || defined(__GAMECUBE__)
 #else
-#error "not implemented"
+#error "not supported platform"
 #endif
+
+
+#define ROMFS_DIR "romfs:/data/"
