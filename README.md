@@ -25,7 +25,7 @@ You need sdl portlibs for the platform and some other portlibs, than you can bui
 | Platform | Compiles | Has ROMFS | Runs as expected |
 | -------- | -------- | --------- | ---------------- |
 | 3ds      | ✅        | ✅         | ✅                |
-| gamecube | ✅        | ✅         | ❓                |
-| wii      | ✅        | ✅         | ❓                |
-| wiiu     | ✅        | ✅         | ❓                |
+| gamecube | ✅        | ✅         | ❌                |
+| wii      | ✅        | ✅         | ✅                |
+| wiiu     | ✅        | ✅         | ❌                |
 | switch   | ✅        | ✅         | ✅                |
