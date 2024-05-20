@@ -1,7 +1,7 @@
 
 # libraries
 
-gamecube_dependencies = [
+dependencies = [
     'freetype2',
     'harfbuzz',
     'ogg',
@@ -10,7 +10,7 @@ gamecube_dependencies = [
     'zlib',
 ]
 
-gamecube_dependencies_native = [
+dependencies_native = [
     'bz2',
     'modplug',
     'ogc',
@@ -19,7 +19,7 @@ gamecube_dependencies_native = [
 ]
 
 
-foreach dep : gamecube_dependencies
+foreach dep : dependencies
     deps += dependency(
         dep,
         required: true,
@@ -34,7 +34,7 @@ if library_dirs.length() == 0
 endif
 
 c = meson.get_compiler('c')
-foreach dep : gamecube_dependencies_native
+foreach dep : dependencies_native
     deps += c.find_library(
         dep,
         required: true,
@@ -51,12 +51,10 @@ elf_file = build_target(
     src_files,
     include_directories: inc_dirs,
     dependencies: deps,
-    c_args: compile_args,
-    cpp_args: compile_args,
-    override_options: [
-        'warning_level=3',
-        'werror=true',
-    ],
+    override_options: {
+        'warning_level': '3',
+        'werror': true,
+    },
     native: false,
     target_type: 'executable',
 )
